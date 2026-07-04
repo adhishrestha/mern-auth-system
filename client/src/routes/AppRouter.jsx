@@ -1,15 +1,17 @@
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 import AuthLayout from '@/layouts/AuthLayout';
 import MainLayout from '@/layouts/MainLayout';
 import HomePage from '@/pages/Home/HomePage';
 import LoginPage from '@/pages/Auth/LoginPage';
 import NotFoundPage from '@/pages/Errors/NotFoundPage';
 import RegisterPage from '@/pages/Auth/RegisterPage';
-import React from 'react';
-import { Route, Router, Routes } from 'react-router-dom';
 import ForgetPasswordPage from '@/pages/Auth/ForgetPasswordPage';
 import VerifyEmailPage from '@/pages/Auth/VerifyEmailPage';
 import ResendVerificationPage from '@/pages/Auth/ResendVerificationPage';
 import ResetPasswordPage from '@/pages/Auth/ResetPasswordPage';
+import DocsPage from '@/pages/DocsPage';
+import AboutPage from '@/pages/AboutPage';
 
 const AppRouter = () => {
   return (
@@ -18,6 +20,8 @@ const AppRouter = () => {
         {/* Public */}
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
+          <Route path="docs" element={<DocsPage />} />
+          <Route path="about" element={<AboutPage />} />
         </Route>
 
         {/* Auth */}
