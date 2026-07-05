@@ -10,8 +10,8 @@ import ForgetPasswordPage from '@/pages/Auth/ForgetPasswordPage';
 import VerifyEmailPage from '@/pages/Auth/VerifyEmailPage';
 import ResendVerificationPage from '@/pages/Auth/ResendVerificationPage';
 import ResetPasswordPage from '@/pages/Auth/ResetPasswordPage';
-import DocsPage from '@/pages/DocsPage';
-import AboutPage from '@/pages/AboutPage';
+import Features from '@/pages/Features';
+import FAQ from '@/pages/FAQ';
 
 const AppRouter = () => {
   return (
@@ -20,8 +20,8 @@ const AppRouter = () => {
         {/* Public */}
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="docs" element={<DocsPage />} />
-          <Route path="about" element={<AboutPage />} />
+          <Route path="features" element={<Features />} />
+          <Route path="faq" element={<FAQ />} />
         </Route>
 
         {/* Auth */}
