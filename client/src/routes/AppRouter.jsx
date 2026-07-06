@@ -2,14 +2,14 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AuthLayout from '@/layouts/AuthLayout';
 import MainLayout from '@/layouts/MainLayout';
-import HomePage from '@/pages/Home/HomePage';
-import LoginPage from '@/pages/Auth/LoginPage';
+import HomePage from '@/features/home/HomePage';
+import LoginPage from '@/features/auth/pages/LoginPage';
 import NotFoundPage from '@/pages/Errors/NotFoundPage';
-import RegisterPage from '@/pages/Auth/RegisterPage';
-import ForgetPasswordPage from '@/pages/Auth/ForgetPasswordPage';
-import VerifyEmailPage from '@/pages/Auth/VerifyEmailPage';
-import ResendVerificationPage from '@/pages/Auth/ResendVerificationPage';
-import ResetPasswordPage from '@/pages/Auth/ResetPasswordPage';
+import RegisterPage from '@/features/auth/pages/RegisterPage';
+import ForgetPasswordPage from '@/features/auth/pages/ForgetPasswordPage';
+import VerifyEmailPage from '@/features/auth/pages/VerifyEmailPage';
+import ResendVerificationPage from '@/features/auth/pages/ResendVerificationPage';
+import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage';
 import Features from '@/pages/Features';
 import FAQ from '@/pages/FAQ';
 
@@ -20,8 +20,7 @@ const AppRouter = () => {
         {/* Public */}
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="features" element={<Features />} />
-          <Route path="faq" element={<FAQ />} />
+
         </Route>
 
         {/* Auth */}
