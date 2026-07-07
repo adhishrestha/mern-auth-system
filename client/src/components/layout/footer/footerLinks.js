@@ -2,35 +2,89 @@ export const footerLinks = [
   {
     title: 'Quick Links',
     links: [
-      { name: 'Home ', path: '/' },
-      { name: 'Features', path: '/features' },
-      { name: 'FAQ', path: '/faq' },
+      {
+        label: 'Home',
+        type: 'scroll',
+        target: 'hero',
+      },
+      {
+        label: 'Features',
+        type: 'scroll',
+        target: 'features',
+      },
+      {
+        label: 'FAQ',
+        type: 'scroll',
+        target: 'faq',
+      },
     ],
   },
+
   {
     title: 'Authentication',
     links: [
-      { name: 'Login', path: '/login' },
-      { name: 'Register', path: '/register' },
-      { name: ' Forgot Password', path: '/forget-password' },
-      { name: ' Verify Email', path: '/verify-email' },
+      {
+        label: 'Login',
+        type: 'route',
+        target: '/login',
+      },
+      {
+        label: 'Register',
+        type: 'route',
+        target: '/register',
+      },
+      {
+        label: 'Forgot Password',
+        type: 'route',
+        target: '/forget-password',
+      },
+      {
+        label: 'Verify Email',
+        type: 'route',
+        target: '/verify-email',
+      },
     ],
   },
+
   {
     title: 'Built With',
     links: [
-      { name: 'React' },
-      { name: 'Node.js' },
-      { name: 'Express' },
-      { name: 'MongoDB' },
-      { name: 'JWT' },
+      {
+        label: 'React',
+        type: 'text',
+      },
+      {
+        label: 'Node.js',
+        type: 'text',
+      },
+      {
+        label: 'Express',
+        type: 'text',
+      },
+      {
+        label: 'MongoDB',
+        type: 'text',
+      },
+      {
+        label: 'JWT',
+        type: 'text',
+      },
     ],
   },
+
   {
-    title: ' Connect',
+    title: 'Connect',
     links: [
-      { name: 'GitHub', path: 'https://github.com/adhishrestha' },
-      { name: 'LinkedIn', path: 'https://www.linkedin.com/in/aditya-stha/' },
+      {
+        label: 'GitHub',
+        type: 'external',
+        target: 'https://github.com/adhishrestha',
+      },
+      {
+        label: 'LinkedIn',
+        type: 'external',
+        target: 'https://www.linkedin.com/in/aditya-stha/',
+      },
     ],
   },
 ];
