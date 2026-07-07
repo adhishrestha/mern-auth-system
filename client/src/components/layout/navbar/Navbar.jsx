@@ -5,7 +5,7 @@ import MobileNav from './MobileNav';
 import MobileSidebar from './MobileSidebar';
 import useEscapeKey from '../../../hooks/useEscapeKey';
 import useBodyScrollLock from '@/hooks/useBodyScrollLock';
-import useScrollDirection from '@/hooks/useScrollDirection';
+import useActiveSection from '@/hooks/useActiveSection';
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
@@ -18,30 +18,28 @@ const Navbar = () => {
     setShowUserMenu(false);
   });
 
-  const showNavbar = useScrollDirection();
-  useEffect(() => {
-    if (!showNavbar) {
-      setShowUserMenu(false);
-    }
-  }, [showNavbar]);
-
+  const activeSection = useActiveSection(['hero', 'features', 'faq']);
   return (
     <>
       <header
-        className={`fixed top-0 left-0 z-40 w-full bg-white shadow-sm transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}
+        className={`duration-300'} fixed top-0 left-0 z-40 w-full bg-white shadow-sm transition-transform`}
       >
         <Container>
           <nav aria-label="Main navigation">
             <DesktopNav
-              openMenu={openMenu}
               showUserMenu={showUserMenu}
               setShowUserMenu={setShowUserMenu}
+              activeSection={activeSection}
             />
             <MobileNav setOpenMenu={setOpenMenu} />
           </nav>
         </Container>
       </header>
-      <MobileSidebar openMenu={openMenu} setOpenMenu={setOpenMenu} />
+      <MobileSidebar
+        openMenu={openMenu}
+        setOpenMenu={setOpenMenu}
+        activeSection={activeSection}
+      />
     </>
   );
 };

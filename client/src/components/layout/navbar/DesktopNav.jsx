@@ -1,14 +1,16 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { navLinks } from './navLinks';
 import { ChevronDown, CircleUserRound } from 'lucide-react';
 import IconButton from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import Button from '@/components/ui/Button';
-import { getNavClass } from '@/utils/navClass';
+import { scrollToSection } from '@/utils/scrollToSection';
+import { getNavButtonClass } from '@/utils/navClass';
 
-const DesktopNav = ({ showUserMenu, setShowUserMenu }) => {
+const DesktopNav = ({ showUserMenu, setShowUserMenu, activeSection }) => {
   const isAuthenticated = false;
+
   return (
     <div className="hidden items-center justify-between py-4 lg:flex">
       {/* Logo */}
@@ -23,10 +25,14 @@ const DesktopNav = ({ showUserMenu, setShowUserMenu }) => {
       {/* Nav */}
       <ul className="flex gap-10">
         {navLinks.map((link) => (
-          <li key={link.name}>
-            <NavLink to={link.path} className={getNavClass}>
-              {link.name}
-            </NavLink>
+          <li key={link.label}>
+            <button
+              type="button"
+              onClick={() => scrollToSection(link.target)}
+              className={getNavButtonClass(activeSection === link.target)}
+            >
+              {link.label}
+            </button>
           </li>
         ))}
       </ul>

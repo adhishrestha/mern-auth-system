@@ -3,10 +3,18 @@ import { Link, NavLink } from 'react-router-dom';
 import IconButton from '@/components/ui/IconButton';
 import { X } from 'lucide-react';
 import { navLinks } from './navLinks';
-import { getNavClass } from '@/utils/navClass';
 import Button from '@/components/ui/Button';
+import { scrollToSection } from '@/utils/scrollToSection';
+import { getNavButtonClass } from '@/utils/navClass';
 
-const MobileSidebar = ({ openMenu, setOpenMenu }) => {
+const MobileSidebar = ({ openMenu, setOpenMenu, activeSection }) => {
+  const handleClick = (id) => {
+    setOpenMenu(false);
+
+    setTimeout(() => {
+      scrollToSection(id);
+    }, 100);
+  };
   return (
     <div
       className={`fixed inset-0 z-50 transition-opacity duration-300 ${openMenu ? 'bg-black/40 opacity-100 backdrop-blur-sm' : 'pointer-events-none opacity-0'}`}
@@ -37,14 +45,15 @@ const MobileSidebar = ({ openMenu, setOpenMenu }) => {
         {/* Mobile Links */}
         <ul className="flex-1 space-y-2 p-4">
           {navLinks.map((link) => (
-            <li key={link.name}>
-              <NavLink
-                to={link.path}
-                onClick={() => setOpenMenu(false)}
-                className={getNavClass}
+            <li key={link.label}>
+              <button
+                type="button"
+                onClick={() => handleClick(link.target)}
+
+                className={getNavButtonClass(activeSection === link.target)}
               >
-                {link.name}
-              </NavLink>
+                {link.label}
+              </button>
             </li>
           ))}
         </ul>
