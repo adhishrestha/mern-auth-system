@@ -1,8 +1,6 @@
 import React from 'react';
-import Container from '@/components/ui/Container';
-import Features from './components/Features/Features';
-import FAQ from './components/FAQ/FAQ';
-import Hero from './components/Hero/Hero';
+import Hero from './sections/Hero/Hero';
+import FeaturesSection from './sections/Features/FeaturesSection';
 
 const HomePage = () => {
   return (
@@ -12,11 +10,7 @@ const HomePage = () => {
       </section>
 
       <section id="features">
-        <Features />
-      </section>
-
-      <section id="faq">
-        <FAQ />
+        <FeaturesSection />
       </section>
     </div>
   );
