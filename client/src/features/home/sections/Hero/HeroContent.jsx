@@ -12,13 +12,13 @@ const HeroContent = () => {
         Production Ready Authentication
       </SectionBadge>
       <h1 className="mt-6 text-5xl leading-tight font-bold">
-        Secure MERN Authentication
+        Production-Ready
         <br />
-        Made Simple
+        MERN Authentication
       </h1>
       <p className="mt-6 text-lg text-gray-600">
         Build a production-ready authentication system featuring JWT, Email
-        Verification, Password Reset, Protected Routes and Responsive Design.
+        Verification, Password Reset, Protected Routes and Responsive Interface.
       </p>
 
       <div className="mt-10 flex flex-col gap-4">

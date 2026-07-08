@@ -5,7 +5,7 @@ import HeroPreview from './HeroPreview';
 
 const Hero = () => {
   return (
-    <section className="py-20 lg:py-28">
+    <section className="py-20">
       <Container>
         <div className="grid items-center gap-16 lg:grid-cols-2">
           <HeroContent />
