@@ -5,6 +5,7 @@ import { twMerge } from 'tailwind-merge';
 const cn = (...inputs) => twMerge(clsx(inputs));
 
 const Button = ({
+  as: Component = 'button',
   children,
   variant = '',
   size = '',
@@ -46,7 +47,7 @@ const Button = ({
   };
 
   return (
-    <button
+    <Component
       type={type}
       aria-disabled={disabled || loading}
       className={cn(
@@ -73,7 +74,7 @@ const Button = ({
           )}
         </>
       )}
-    </button>
+    </Component>
   );
 };
 

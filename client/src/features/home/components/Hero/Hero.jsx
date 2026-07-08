@@ -1,10 +1,18 @@
 import React from 'react';
+import HeroContent from './HeroContent';
+import Container from '@/components/ui/Container';
+import HeroPreview from './HeroPreview';
 
 const Hero = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center border p-4">
-      Hero Section
-    </div>
+    <section className="py-20 lg:py-28">
+      <Container>
+        <div className="grid items-center gap-16 lg:grid-cols-2">
+          <HeroContent />
+          <HeroPreview />
+        </div>
+      </Container>
+    </section>
   );
 };
 
