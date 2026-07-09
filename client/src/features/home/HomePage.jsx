@@ -4,6 +4,7 @@ import FeaturesSection from './sections/Features/FeaturesSection';
 import AuthFlowSection from './sections/AuthFlow/AuthFlowSection';
 import TechStackSection from './sections/TechStack/TechStackSection';
 import FAQSection from './sections/FAQ/FAQSection';
+import CTASection from './sections/cta/CTASection';
 
 const HomePage = () => {
   return (
@@ -26,6 +27,10 @@ const HomePage = () => {
 
       <section id="faq">
         <FAQSection />
+      </section>
+      
+      <section>
+        <CTASection/>
       </section>
     </div>
   );
