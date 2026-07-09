@@ -5,7 +5,7 @@ import SectionHeading from '@/components/ui/SectionHeading';
 
 const FeaturesSection = () => {
   return (
-    <section className="bg-slate-50 py-20">
+    <section id="features" className="bg-slate-50 py-20">
       <Container>
         {/* Section Header */}
         <SectionHeading

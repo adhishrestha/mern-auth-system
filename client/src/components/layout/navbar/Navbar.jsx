@@ -22,7 +22,7 @@ const Navbar = () => {
   return (
     <>
       <header
-        className={`duration-300'} fixed top-0 left-0 z-40 w-full bg-white shadow-sm transition-transform`}
+        className={`fixed top-0 left-0 z-40 w-full bg-white shadow-sm transition-transform duration-300`}
       >
         <Container>
           <nav aria-label="Main navigation">

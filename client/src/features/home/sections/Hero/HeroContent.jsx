@@ -11,7 +11,7 @@ const HeroContent = () => {
       <SectionBadge icon={<ShieldCheck size={16} />}>
         Production Ready Authentication
       </SectionBadge>
-      <h1 className="mt-6 text-5xl leading-tight font-bold">
+      <h1 className="mt-6 text-4xl md:text-5xl leading-tight font-bold">
         Production-Ready
         <br />
         MERN Authentication
