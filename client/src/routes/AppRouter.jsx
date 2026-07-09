@@ -10,8 +10,6 @@ import ForgetPasswordPage from '@/features/auth/pages/ForgetPasswordPage';
 import VerifyEmailPage from '@/features/auth/pages/VerifyEmailPage';
 import ResendVerificationPage from '@/features/auth/pages/ResendVerificationPage';
 import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage';
-import Features from '@/features/home/components/Features/Features';
-import FAQ from '@/features/home/components/FAQ/FAQ';
 
 const AppRouter = () => {
   return (
