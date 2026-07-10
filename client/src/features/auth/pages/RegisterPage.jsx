@@ -1,10 +1,24 @@
 import React from 'react';
+import AuthCard from '../components/AuthCard';
+import AuthHeader from '../components/AuthHeader';
+import AuthFooter from '../components/AuthFooter';
+import RegisterForm from '../components/RegisterForm';
 
 const RegisterPage = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center border border-gray-500 p-4">
-      Register Page
-    </div>
+    <AuthCard>
+      <AuthHeader
+        title=" Create Account"
+        description=" Join to get started with your account."
+      />
+      {/* Register form */}
+      <RegisterForm />
+      <AuthFooter
+        text="Already have an account?"
+        linkText="Sign In"
+        to="/login"
+      />
+    </AuthCard>
   );
 };
 
