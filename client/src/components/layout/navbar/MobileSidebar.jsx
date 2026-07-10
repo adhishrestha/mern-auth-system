@@ -6,6 +6,7 @@ import { navLinks } from './navLinks';
 import Button from '@/components/ui/Button';
 import { scrollToSection } from '@/utils/scrollToSection';
 import { getNavButtonClass } from '@/utils/navClass';
+import Logo from '@/components/common/Logo';
 
 const MobileSidebar = ({ openMenu, setOpenMenu, activeSection }) => {
   const handleClick = (id) => {
@@ -28,14 +29,7 @@ const MobileSidebar = ({ openMenu, setOpenMenu, activeSection }) => {
         {/* Sidebar Header */}
         <div className="mb-6 flex items-center justify-between border-b pb-4">
           {/* Logo */}
-          <Link
-            to="/"
-            onClick={() => setOpenMenu(false)}
-            aria-label="Homepage"
-            className="text-3xl font-bold tracking-wider"
-          >
-            Logo
-          </Link>
+          <Logo />
 
           <IconButton ariaLabel="Close menu" onClick={() => setOpenMenu(false)}>
             <X className="h-6 w-6" />

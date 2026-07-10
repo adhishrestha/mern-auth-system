@@ -4,6 +4,7 @@ import { Menu, CircleUserRound, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Dropdown from '@/components/ui/Dropdown';
 import Button from '@/components/ui/Button';
+import Logo from '@/components/common/Logo';
 
 const MobileNav = ({ setOpenMenu }) => {
   const isAuthenticated = false;
@@ -11,13 +12,7 @@ const MobileNav = ({ setOpenMenu }) => {
   return (
     <div className="flex items-center justify-between py-4 lg:hidden">
       {/* Logo */}
-      <Link
-        to="/"
-        aria-label="Homepage"
-        className="text-3xl font-bold tracking-wider"
-      >
-        Logo
-      </Link>
+      <Logo />
 
       <div className="flex items-center gap-4">
         {isAuthenticated ? (

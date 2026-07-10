@@ -7,6 +7,7 @@ import Button from '../../ui/Button';
 
 import FooterColumn from './FooterColumn';
 import { footerLinks } from './footerLinks';
+import Logo from '@/components/common/Logo';
 
 const Footer = () => {
   return (
@@ -14,15 +15,9 @@ const Footer = () => {
       <Container>
         <section className="grid grid-cols-1 lg:grid-cols-[1fr_2fr]">
           {/* Left */}
-
           <div className="border-b border-[#CAC9CF] py-6 pb-10 lg:border-r lg:border-b-0 lg:pr-10">
-            <Link
-              to="/"
-              aria-label="Homepage"
-              className="text-3xl font-bold tracking-wider"
-            >
-              Logo
-            </Link>
+            {/* Logo */}
+            <Logo />
 
             <p className="mt-4.5 max-w-xs text-sm leading-6">
               Secure authentication built with the MERN stack.

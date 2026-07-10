@@ -7,6 +7,7 @@ import Dropdown from '@/components/ui/Dropdown';
 import Button from '@/components/ui/Button';
 import { scrollToSection } from '@/utils/scrollToSection';
 import { getNavButtonClass } from '@/utils/navClass';
+import Logo from '@/components/common/Logo';
 
 const DesktopNav = ({ showUserMenu, setShowUserMenu, activeSection }) => {
   const isAuthenticated = false;
@@ -14,13 +15,7 @@ const DesktopNav = ({ showUserMenu, setShowUserMenu, activeSection }) => {
   return (
     <div className="hidden items-center justify-between py-4 lg:flex">
       {/* Logo */}
-      <Link
-        to="/"
-        aria-label="Homepage"
-        className="text-3xl font-bold tracking-wider"
-      >
-        Logo
-      </Link>
+      <Logo />
 
       {/* Nav */}
       <ul className="flex gap-10">
