@@ -1,23 +1,7 @@
 import React from 'react';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const cn = (...inputs) => twMerge(clsx(inputs));
-
-const Button = ({
-  as: Component = 'button',
-  children,
-  variant = '',
-  size = '',
-  icon: Icon,
-  iconPosition = 'right',
-  loading = false,
-  disabled = false,
-  fullWidth = false,
-  type = 'button',
-  className = '',
-  ...props
-}) => {
   const baseStyles =
     'inline-flex items-center justify-center gap-2 font-semibold uppercase transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer rounded-md';
 
@@ -34,12 +18,27 @@ const Button = ({
     md: 'px-5 py-3 text-sm leading-[20px] tracking-[0.04em]',
 
     lg: 'px-6 py-3.5 text-sm leading-[20px] tracking-[0.08em]',
-
   };
+const Button = ({
+  as: Component = 'button',
+  children,
+  variant = 'outlineDark',
+  size = 'md',
+  icon: Icon,
+  iconPosition = 'right',
+  loading = false,
+  disabled = false,
+  fullWidth = false,
+  type = 'button',
+  className = '',
+  ...props
+}) => {
+
 
   return (
     <Component
       type={type}
+      disabled={disabled || loading}
       aria-disabled={disabled || loading}
       className={cn(
         baseStyles,
@@ -51,7 +50,9 @@ const Button = ({
       {...props}
     >
       {loading ? (
-        <span>Loading...</span>
+        <span>
+          <Loader2 className="h-4 w-4 animate-spin" />
+        </span>
       ) : (
         <>
           {Icon && iconPosition === 'left' && (

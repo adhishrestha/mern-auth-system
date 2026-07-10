@@ -1,10 +1,26 @@
-import React from "react";
+import React from 'react';
+import AuthCard from '../components/AuthCard';
+import AuthHeader from '../components/AuthHeader';
+import LoginForm from '../components/LoginForm';
+import AuthFooter from '../components/AuthFooter';
 
 const LoginPage = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center border border-gray-500 p-4">
-      Login Page
-    </div>
+    <AuthCard>
+      <AuthHeader
+        title="Welcome Back"
+        description="Sign in to your account to continue."
+      />
+
+      {/* Login form  */}
+      <LoginForm />
+
+      <AuthFooter
+        text="Don't have an account?"
+        linkText=" Create one"
+        to="/register"
+      />
+    </AuthCard>
   );
 };
 
