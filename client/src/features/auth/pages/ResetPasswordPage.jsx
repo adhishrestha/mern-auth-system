@@ -1,10 +1,17 @@
-import React from 'react';
+import AuthCard from '../components/AuthCard';
+import AuthHeader from '../components/AuthHeader';
+import ResetPasswordForm from '../components/ResetPasswordForm';
 
 const ResetPasswordPage = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center border border-gray-500 p-4">
-      Reset Password Page
-    </div>
+    <AuthCard>
+      <AuthHeader
+        title="Reset Password"
+        description="Create a new password for your account."
+      />
+
+      <ResetPasswordForm />
+    </AuthCard>
   );
 };
 
