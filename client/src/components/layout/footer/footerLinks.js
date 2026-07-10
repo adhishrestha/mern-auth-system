@@ -36,7 +36,7 @@ export const footerLinks = [
       {
         label: 'Forgot Password',
         type: 'route',
-        target: '/forget-password',
+        target: '/forgot-password',
       },
       {
         label: 'Verify Email',
