@@ -10,6 +10,7 @@ import ForgetPasswordPage from '@/features/auth/pages/ForgotPasswordPage';
 import VerifyEmailPage from '@/features/auth/pages/VerifyEmailPage';
 import ResendVerificationPage from '@/features/auth/pages/ResendVerificationPage';
 import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage';
+import CheckEmailPage from '@/features/auth/pages/CheckEmailPage';
 
 const AppRouter = () => {
   return (
@@ -25,6 +26,7 @@ const AppRouter = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="forgot-password" element={<ForgetPasswordPage />} />
+          <Route path="check-email" element={<CheckEmailPage />} />
           <Route path="reset-password/:token" element={<ResetPasswordPage />} />
           <Route path="verify-email" element={<VerifyEmailPage />} />
           <Route
