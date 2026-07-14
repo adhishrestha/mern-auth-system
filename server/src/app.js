@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import notFound from "./middleware/notFound.js";
+import errorMiddleware from "./middleware/errorMiddleware.js";
 const app = express();
 
 // Middleware
@@ -23,5 +25,7 @@ app.get("/", (req, res) => {
     environment: process.env.NODE_ENV,
   });
 });
+app.use(notFound);
 
+app.use(errorMiddleware);
 export default app;
