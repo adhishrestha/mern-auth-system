@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import notFound from "./middleware/notFound.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
+import authRoutes from "./features/auth/routes/auth.routes.js";
 const app = express();
 
 // Middleware
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
     environment: process.env.NODE_ENV,
   });
 });
+app.use("/api/v1/auth", authRoutes);
 app.use(notFound);
 
 app.use(errorMiddleware);
