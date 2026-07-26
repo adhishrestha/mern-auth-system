@@ -1,4 +1,6 @@
 import express from "express";
+import notFound from "./middleware/notFound.js";
+import errorHandler from "./middleware/errorHandler.js";
 const app = express();
 
 //Temporary route
@@ -9,4 +11,10 @@ app.get("/", (req, res) => {
   });
 });
 
+// Error Handling Middleware //
+
+app.use(notFound);
+
+//Global error handler
+app.use(errorHandler);
 export default app;
