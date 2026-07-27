@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    firstName: {
+    fullName: {
       type: String,
       required: [true, "Full name is required"],
       trim: true,
@@ -31,3 +31,7 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+const User = mongoose.model("User", userSchema);
+
+export default User;
