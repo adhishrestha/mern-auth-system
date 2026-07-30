@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { authHealth, register } from "../controllers/auth.controller.js";
+import {
+  authHealth,
+  register,
+  verifyEmailController,
+} from "../controllers/auth.controller.js";
 import validate from "../../../middleware/validate.js";
 import { registerSchema } from "../validators/auth.validator.js";
 
@@ -10,5 +14,8 @@ router.get("/health", authHealth);
 
 // Register
 router.post("/register", validate(registerSchema), register);
+
+// Verify-Email
+router.get("/verify-email", verifyEmailController);
 
 export default router;
