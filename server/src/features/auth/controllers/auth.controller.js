@@ -2,6 +2,7 @@ import {
   getAuthHealth,
   registerUser,
   verifyEmail,
+  loginUser,
 } from "../services/auth.service.js";
 
 import { sendVerificationEmail } from "../services/email.service.js";
@@ -55,4 +56,18 @@ const verifyEmailController = async (req, res, next) => {
   }
 };
 
-export { authHealth, register, verifyEmailController };
+const loginController = async (req, res, next) => {
+  try {
+    const authData = await loginUser(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful.",
+      data: authData,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { authHealth, register, verifyEmailController, loginController };
