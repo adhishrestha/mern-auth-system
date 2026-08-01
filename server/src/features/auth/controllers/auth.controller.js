@@ -4,6 +4,7 @@ import {
   verifyEmail,
   loginUser,
   refreshAccessToken,
+  logoutUser,
 } from "../services/auth.service.js";
 
 import { sendVerificationEmail } from "../services/email.service.js";
@@ -87,10 +88,25 @@ const refreshTokenController = async (req, res, next) => {
   }
 };
 
+const logoutController = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+
+    const result = await logoutUser(refreshToken);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   authHealth,
   register,
   verifyEmailController,
   loginController,
   refreshTokenController,
+  logoutController,
 };

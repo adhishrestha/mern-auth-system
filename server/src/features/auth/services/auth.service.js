@@ -151,6 +151,39 @@ const refreshAccessToken = async (refreshToken) => {
   };
 };
 
+const logoutUser = async (refreshToken) => {
+  let decoded;
+
+  try {
+    decoded = verifyRefreshToken(refreshToken);
+  } catch (error) {
+    throw new ApiError(401, "Invalid or expired refresh token.");
+  }
+
+  // Find the user
+  const user = await User.findById(decoded.userId);
+
+  if (!user) {
+    throw new ApiError(401, "Invalid refresh token.");
+  }
+
+  // Hash the incoming refresh token
+  const hashedRefreshToken = hashToken(refreshToken);
+
+  // Compare with stored hash
+  if (user.refreshToken !== hashedRefreshToken) {
+    throw new ApiError(401, "Invalid refresh token.");
+  }
+
+  // Clear the stored refresh token
+  user.refreshToken = null;
+  await user.save();
+
+  return {
+    message: "Logged out successfully.",
+  };
+};
+
 const verifyEmail = async (token) => {
   const hashedToken = hashToken(token);
 
@@ -182,5 +215,6 @@ export {
   registerUser,
   loginUser,
   refreshAccessToken,
+  logoutUser,
   verifyEmail,
 };

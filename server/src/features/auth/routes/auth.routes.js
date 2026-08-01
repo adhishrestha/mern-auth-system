@@ -5,6 +5,7 @@ import {
   verifyEmailController,
   loginController,
   refreshTokenController,
+  logoutController,
 } from "../controllers/auth.controller.js";
 import validate from "../../../middleware/validate.js";
 import { registerSchema, loginSchema } from "../validators/auth.validator.js";
@@ -25,4 +26,7 @@ router.post("/login", validate(loginSchema), loginController);
 
 // Refresh Access Token
 router.post("/refresh-token", refreshTokenController);
+
+// Logout
+router.post("/logout", logoutController);
 export default router;
