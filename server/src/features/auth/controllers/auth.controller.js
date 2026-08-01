@@ -3,6 +3,7 @@ import {
   registerUser,
   verifyEmail,
   loginUser,
+  refreshAccessToken,
 } from "../services/auth.service.js";
 
 import { sendVerificationEmail } from "../services/email.service.js";
@@ -70,4 +71,26 @@ const loginController = async (req, res, next) => {
   }
 };
 
-export { authHealth, register, verifyEmailController, loginController };
+const refreshTokenController = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+
+    const authData = await refreshAccessToken(refreshToken);
+
+    res.status(200).json({
+      success: true,
+      message: "Access token refreshed successfully.",
+      data: authData,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  authHealth,
+  register,
+  verifyEmailController,
+  loginController,
+  refreshTokenController,
+};

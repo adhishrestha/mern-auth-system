@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import bcrypt from "bcrypt";
 
 import User from "../../auth/models/user.model.js";
@@ -8,6 +7,7 @@ import { generateVerificationToken, hashToken } from "../utils/token.utils.js";
 import {
   generateAccessToken,
   generateRefreshToken,
+  verifyRefreshToken,
 } from "../utils/jwt.util.js";
 
 const getAuthHealth = () => {
@@ -84,10 +84,7 @@ const loginUser = async ({ email, password }) => {
   const refreshToken = generateRefreshToken(payload);
 
   // Hash the refresh token before storing it
-  const hashedRefreshToken = crypto
-    .createHash("sha256")
-    .update(refreshToken)
-    .digest("hex");
+  const hashedRefreshToken = hashToken(refreshToken);
 
   // Save hashed refresh token
   user.refreshToken = hashedRefreshToken;
@@ -103,6 +100,54 @@ const loginUser = async ({ email, password }) => {
       email: user.email,
       isEmailVerified: user.isEmailVerified,
     },
+  };
+};
+
+const refreshAccessToken = async (refreshToken) => {
+  let decoded;
+
+  try {
+    decoded = verifyRefreshToken(refreshToken);
+  } catch (error) {
+    throw new ApiError(401, "Invalid or expired refresh token.");
+  }
+
+  // Find the user
+  const user = await User.findById(decoded.userId);
+
+  if (!user) {
+    throw new ApiError(401, "Invalid refresh token.");
+  }
+
+  // Hash the incoming refresh token
+  const hashedRefreshToken = hashToken(refreshToken);
+
+  // Compare with stored hash
+  if (user.refreshToken !== hashedRefreshToken) {
+    throw new ApiError(401, "Invalid refresh token.");
+  }
+
+  // Create a new JWT payload
+  const payload = {
+    userId: user._id.toString(),
+    email: user.email,
+  };
+
+  // Generate new tokens
+  const newAccessToken = generateAccessToken(payload);
+  const newRefreshToken = generateRefreshToken(payload);
+
+  // Hash the new refresh token
+  const newHashedRefreshToken = hashToken(newRefreshToken);
+
+  // Store the new hashed refresh token
+  user.refreshToken = newHashedRefreshToken;
+  await user.save();
+
+  // Return the new tokens
+  return {
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
   };
 };
 
@@ -132,4 +177,10 @@ const verifyEmail = async (token) => {
     message: "Email verified successfully.",
   };
 };
-export { getAuthHealth, registerUser, loginUser, verifyEmail };
+export {
+  getAuthHealth,
+  registerUser,
+  loginUser,
+  refreshAccessToken,
+  verifyEmail,
+};
