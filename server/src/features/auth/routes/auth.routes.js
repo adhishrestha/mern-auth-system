@@ -9,6 +9,7 @@ import {
 } from "../controllers/auth.controller.js";
 import validate from "../../../middleware/validate.js";
 import { registerSchema, loginSchema } from "../validators/auth.validator.js";
+import authenticate from "../../../middleware/auth.middleware.js";
 
 const router = Router();
 
@@ -29,4 +30,13 @@ router.post("/refresh-token", refreshTokenController);
 
 // Logout
 router.post("/logout", logoutController);
+
+// Protected test route
+router.get("/me", authenticate, (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+});
+
 export default router;
