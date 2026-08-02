@@ -6,9 +6,15 @@ import {
   loginController,
   refreshTokenController,
   logoutController,
+  forgotPasswordController,
+  resetPasswordController,
 } from "../controllers/auth.controller.js";
 import validate from "../../../middleware/validate.js";
-import { registerSchema, loginSchema } from "../validators/auth.validator.js";
+import {
+  registerSchema,
+  loginSchema,
+  resetPasswordSchema,
+} from "../validators/auth.validator.js";
 import authenticate from "../../../middleware/auth.middleware.js";
 
 const router = Router();
@@ -31,6 +37,15 @@ router.post("/refresh-token", refreshTokenController);
 // Logout
 router.post("/logout", logoutController);
 
+// Forgot Password
+router.post("/forgot-password", forgotPasswordController);
+
+// Reset Password
+router.post(
+  "/reset-password",
+  validate(resetPasswordSchema),
+  resetPasswordController,
+);
 // Protected test route
 router.get("/me", authenticate, (req, res) => {
   res.status(200).json({

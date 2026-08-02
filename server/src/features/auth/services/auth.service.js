@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import User from "../../auth/models/user.model.js";
 import ApiError from "../../../shared/errors/ApiError.js";
 
-import { generateVerificationToken, hashToken } from "../utils/token.utils.js";
+import { generateSecureToken, hashToken } from "../utils/token.utils.js";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -29,7 +29,7 @@ const registerUser = async ({ fullName, email, password }) => {
   const hashedPassword = await bcrypt.hash(password, 12);
 
   // Generate email verification token
-  const { rawToken, hashedToken, expiresAt } = generateVerificationToken();
+  const { rawToken, hashedToken, expiresAt } = generateSecureToken();
 
   //Create the user
   const user = await User.create({
@@ -151,6 +151,71 @@ const refreshAccessToken = async (refreshToken) => {
   };
 };
 
+const forgotPassword = async (email) => {
+  // Find the user
+  const user = await User.findOne({ email });
+
+  // Always return a generic success response
+  if (!user) {
+    return {
+      message:
+        "If an account with that email exists, a password reset email has been sent.",
+    };
+  }
+
+  // Generate a secure token (1 hour expiry)
+  const { rawToken, hashedToken, expiresAt } = generateSecureToken(
+    60 * 60 * 1000,
+  );
+
+  // Store the hashed token and expiry
+  user.passwordResetToken = hashedToken;
+  user.passwordResetExpires = expiresAt;
+
+  await user.save();
+
+  return {
+    user,
+    resetToken: rawToken,
+    message:
+      "If an account with that email exists, a password reset email has been sent.",
+  };
+};
+
+const resetPassword = async ({ token, password }) => {
+  // Hash the incoming token
+  const hashedToken = hashToken(token);
+
+  // Find a user with a matching valid token
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: new Date() },
+  });
+
+  if (!user) {
+    throw new ApiError(400, "Invalid or expired password reset token.");
+  }
+
+  // Hash the new password
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  // Update the password
+  user.password = hashedPassword;
+
+  // Clear reset fields
+  user.passwordResetToken = null;
+  user.passwordResetExpires = null;
+
+  // Invalidate all existing sessions
+  user.refreshToken = null;
+
+  await user.save();
+
+  return {
+    message: "Password reset successfully.",
+  };
+};
+
 const logoutUser = async (refreshToken) => {
   let decoded;
 
@@ -215,6 +280,8 @@ export {
   registerUser,
   loginUser,
   refreshAccessToken,
+  forgotPassword,
+  resetPassword,
   logoutUser,
   verifyEmail,
 };

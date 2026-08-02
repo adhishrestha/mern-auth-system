@@ -5,7 +5,7 @@ const hashToken = (token) => {
   return crypto.createHash("sha256").update(token).digest("hex");
 };
 
-const generateVerificationToken = () => {
+const generateSecureToken = (expiresInMs = 24 * 60 * 60 * 1000) => {
   //Generate a secure random token
   const rawToken = crypto.randomBytes(32).toString("hex");
 
@@ -13,7 +13,7 @@ const generateVerificationToken = () => {
   const hashedToken = hashToken(rawToken);
 
   //Token expires in 24 hours
-  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + expiresInMs);
 
   return {
     rawToken,
@@ -22,4 +22,4 @@ const generateVerificationToken = () => {
   };
 };
 
-export { generateVerificationToken, hashToken };
+export { generateSecureToken, hashToken };

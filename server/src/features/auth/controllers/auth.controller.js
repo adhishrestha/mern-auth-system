@@ -5,9 +5,14 @@ import {
   loginUser,
   refreshAccessToken,
   logoutUser,
+  forgotPassword,
+  resetPassword,
 } from "../services/auth.service.js";
 
-import { sendVerificationEmail } from "../services/email.service.js";
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} from "../services/email.service.js";
 
 const authHealth = (req, res) => {
   const response = getAuthHealth();
@@ -102,6 +107,49 @@ const logoutController = async (req, res, next) => {
     next(error);
   }
 };
+
+const forgotPasswordController = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const result = await forgotPassword(email);
+
+    // Only send an email if a user exists
+    if (result.user && result.resetToken) {
+      await sendPasswordResetEmail({
+        email: result.user.email,
+        name: result.user.fullName,
+        resetToken: result.resetToken,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetPasswordController = async (req, res, next) => {
+  try {
+    const { token } = req.query;
+    const { password } = req.body;
+
+    const result = await resetPassword({
+      token,
+      password,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   authHealth,
   register,
@@ -109,4 +157,6 @@ export {
   loginController,
   refreshTokenController,
   logoutController,
+  forgotPasswordController,
+  resetPasswordController,
 };

@@ -48,4 +48,30 @@ const sendVerificationEmail = async ({ email, name, verificationToken }) => {
   });
 };
 
-export { sendEmail, sendVerificationEmail };
+const sendPasswordResetEmail = async ({ email, name, resetToken }) => {
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+
+  const html = `
+    <h2>Hello, ${name}!</h2>
+
+    <p>We received a request to reset your password.</p>
+
+    <p>Click the link below to create a new password:</p>
+
+    <a href="${resetUrl}">
+      Reset Password
+    </a>
+
+    <p>This link will expire in 1 hour.</p>
+
+    <p>If you didn't request a password reset, you can safely ignore this email.</p>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: "Reset your password",
+    html,
+  });
+};
+
+export { sendEmail, sendVerificationEmail, sendPasswordResetEmail };
