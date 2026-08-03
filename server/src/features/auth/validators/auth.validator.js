@@ -34,3 +34,11 @@ export const resetPasswordSchema = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter.")
     .regex(/[0-9]/, "Password must contain at least one number."),
 });
+
+export const updateProfileSchema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, "Full name must be at least 2 characters.")
+    .max(100, "Full name must not exceed 100 characters."),
+});

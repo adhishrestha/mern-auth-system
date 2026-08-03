@@ -234,6 +234,30 @@ const getCurrentUser = async (userId) => {
   };
 };
 
+const updateProfile = async (userId, { fullName }) => {
+  // Find the authenticated user
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  // Update editable fields
+  user.fullName = fullName;
+
+  await user.save();
+
+  // Return the updated profile
+  return {
+    id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    isEmailVerified: user.isEmailVerified,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
+};
+
 const logoutUser = async (refreshToken) => {
   let decoded;
 
@@ -301,6 +325,7 @@ export {
   forgotPassword,
   resetPassword,
   getCurrentUser,
+  updateProfile,
   logoutUser,
   verifyEmail,
 };

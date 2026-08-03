@@ -9,12 +9,14 @@ import {
   forgotPasswordController,
   resetPasswordController,
   getCurrentUserController,
+  updateProfileController,
 } from "../controllers/auth.controller.js";
 import validate from "../../../middleware/validate.js";
 import {
   registerSchema,
   loginSchema,
   resetPasswordSchema,
+  updateProfileSchema,
 } from "../validators/auth.validator.js";
 import authenticate from "../../../middleware/auth.middleware.js";
 
@@ -57,5 +59,12 @@ router.post(
 
 // Current authenticated user
 router.get("/me", authenticate, getCurrentUserController);
+
+router.patch(
+  "/profile",
+  authenticate,
+  validate(updateProfileSchema),
+  updateProfileController,
+);
 
 export default router;
