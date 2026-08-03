@@ -8,6 +8,7 @@ import {
   logoutController,
   forgotPasswordController,
   resetPasswordController,
+  getCurrentUserController,
 } from "../controllers/auth.controller.js";
 import validate from "../../../middleware/validate.js";
 import {
@@ -47,11 +48,14 @@ router.post(
   resetPasswordController,
 );
 // Protected test route
-router.get("/me", authenticate, (req, res) => {
-  res.status(200).json({
-    success: true,
-    user: req.user,
-  });
-});
+// router.get("/me", authenticate, (req, res) => {
+//   res.status(200).json({
+//     success: true,
+//     user: req.user,
+//   });
+// });
+
+// Current authenticated user
+router.get("/me", authenticate, getCurrentUserController);
 
 export default router;

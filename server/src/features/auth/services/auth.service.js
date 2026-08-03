@@ -216,6 +216,24 @@ const resetPassword = async ({ token, password }) => {
   };
 };
 
+const getCurrentUser = async (userId) => {
+  const user = await User.findById(userId).select(
+    "_id fullName email isEmailVerified createdAt",
+  );
+
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  return {
+    id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    isEmailVerified: user.isEmailVerified,
+    createdAt: user.createdAt,
+  };
+};
+
 const logoutUser = async (refreshToken) => {
   let decoded;
 
@@ -282,6 +300,7 @@ export {
   refreshAccessToken,
   forgotPassword,
   resetPassword,
+  getCurrentUser,
   logoutUser,
   verifyEmail,
 };

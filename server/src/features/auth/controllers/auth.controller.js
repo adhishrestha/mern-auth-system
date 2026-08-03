@@ -7,6 +7,7 @@ import {
   logoutUser,
   forgotPassword,
   resetPassword,
+  getCurrentUser,
 } from "../services/auth.service.js";
 
 import {
@@ -150,6 +151,20 @@ const resetPasswordController = async (req, res, next) => {
     next(error);
   }
 };
+
+const getCurrentUserController = async (req, res, next) => {
+  try {
+    const user = await getCurrentUser(req.user.id);
+
+    res.status(200).json({
+      success: true,
+      message: "Profile fetched successfully.",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   authHealth,
   register,
@@ -159,4 +174,5 @@ export {
   logoutController,
   forgotPasswordController,
   resetPasswordController,
+  getCurrentUserController,
 };
