@@ -299,6 +299,32 @@ const changePassword = async (userId, { currentPassword, newPassword }) => {
   };
 };
 
+const deleteAccount = async (userId, currentPassword) => {
+  // Find the authenticated user
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  // Verify current password
+  const isPasswordCorrect = await bcrypt.compare(
+    currentPassword,
+    user.password,
+  );
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(400, "Current password is incorrect.");
+  }
+
+  // Permanently delete the user account
+  await User.findByIdAndDelete(userId);
+
+  return {
+    message: "Account deleted successfully.",
+  };
+};
+
 const logoutUser = async (refreshToken) => {
   let decoded;
 
@@ -368,6 +394,7 @@ export {
   getCurrentUser,
   updateProfile,
   changePassword,
+  deleteAccount,
   logoutUser,
   verifyEmail,
 };

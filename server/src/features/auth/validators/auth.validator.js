@@ -53,3 +53,7 @@ export const changePasswordSchema = z.object({
     .regex(/[a-z]/, "New password must contain at least one lowercase letter.")
     .regex(/[0-9]/, "New password must contain at least one number."),
 });
+
+export const deleteAccountSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required."),
+});

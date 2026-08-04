@@ -10,6 +10,7 @@ import {
   getCurrentUser,
   updateProfile,
   changePassword,
+  deleteAccount,
 } from "../services/auth.service.js";
 
 import {
@@ -195,6 +196,19 @@ const changePasswordController = async (req, res, next) => {
   }
 };
 
+const deleteAccountController = async (req, res, next) => {
+  try {
+    const result = await deleteAccount(req.user._id, req.body.currentPassword);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   authHealth,
   register,
@@ -207,4 +221,5 @@ export {
   getCurrentUserController,
   updateProfileController,
   changePasswordController,
+  deleteAccountController,
 };

@@ -11,6 +11,7 @@ import {
   getCurrentUserController,
   updateProfileController,
   changePasswordController,
+  deleteAccountController,
 } from "../controllers/auth.controller.js";
 import validate from "../../../middleware/validate.js";
 import {
@@ -19,6 +20,7 @@ import {
   resetPasswordSchema,
   updateProfileSchema,
   changePasswordSchema,
+  deleteAccountSchema,
 } from "../validators/auth.validator.js";
 import authenticate from "../../../middleware/auth.middleware.js";
 
@@ -76,4 +78,10 @@ router.patch(
   changePasswordController,
 );
 
+router.delete(
+  "/delete-account",
+  authenticate,
+  validate(deleteAccountSchema),
+  deleteAccountController,
+);
 export default router;
