@@ -10,6 +10,7 @@ import {
   resetPasswordController,
   getCurrentUserController,
   updateProfileController,
+  changePasswordController,
 } from "../controllers/auth.controller.js";
 import validate from "../../../middleware/validate.js";
 import {
@@ -17,6 +18,7 @@ import {
   loginSchema,
   resetPasswordSchema,
   updateProfileSchema,
+  changePasswordSchema,
 } from "../validators/auth.validator.js";
 import authenticate from "../../../middleware/auth.middleware.js";
 
@@ -65,6 +67,13 @@ router.patch(
   authenticate,
   validate(updateProfileSchema),
   updateProfileController,
+);
+
+router.patch(
+  "/change-password",
+  authenticate,
+  validate(changePasswordSchema),
+  changePasswordController,
 );
 
 export default router;

@@ -258,6 +258,47 @@ const updateProfile = async (userId, { fullName }) => {
   };
 };
 
+const changePassword = async (userId, { currentPassword, newPassword }) => {
+  // Find the authenticated user
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  // Verify current password
+  const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+  if (!isPasswordValid) {
+    throw new ApiError(400, "Current password is incorrect.");
+  }
+
+  // Prevent reusing the same password
+  const isSamePassword = await bcrypt.compare(newPassword, user.password);
+
+  if (isSamePassword) {
+    throw new ApiError(
+      400,
+      "New password must be different from the current password.",
+    );
+  }
+
+  // Hash the new password
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+  // Update password
+  user.password = hashedPassword;
+
+  // Invalidate existing refresh token
+  user.refreshToken = null;
+
+  await user.save();
+
+  return {
+    message: "Password changed successfully. Please log in again.",
+  };
+};
+
 const logoutUser = async (refreshToken) => {
   let decoded;
 
@@ -326,6 +367,7 @@ export {
   resetPassword,
   getCurrentUser,
   updateProfile,
+  changePassword,
   logoutUser,
   verifyEmail,
 };

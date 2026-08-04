@@ -9,6 +9,7 @@ import {
   resetPassword,
   getCurrentUser,
   updateProfile,
+  changePassword,
 } from "../services/auth.service.js";
 
 import {
@@ -180,6 +181,20 @@ const updateProfileController = async (req, res, next) => {
     next(error);
   }
 };
+
+const changePasswordController = async (req, res, next) => {
+  try {
+    const result = await changePassword(req.user.id, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   authHealth,
   register,
@@ -191,4 +206,5 @@ export {
   resetPasswordController,
   getCurrentUserController,
   updateProfileController,
+  changePasswordController,
 };
