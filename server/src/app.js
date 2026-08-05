@@ -1,9 +1,13 @@
 import express from "express";
+import helmet from "helmet";
 import authRoutes from "./features/auth/routes/auth.routes.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
+
+// Security headers
+app.use(helmet());
 
 // Parse JSON request bodies
 app.use(express.json());
@@ -18,8 +22,6 @@ app.get("/", (req, res) => {
 
 // Authentication routes
 app.use("/api/v1/auth", authRoutes);
-
-// Error Handling Middleware 
 
 // Handle unknown routes (404)
 app.use(notFound);
