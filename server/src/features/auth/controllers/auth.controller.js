@@ -17,6 +17,7 @@ import {
   sendVerificationEmail,
   sendPasswordResetEmail,
 } from "../services/email.service.js";
+import { refreshTokenCookieOptions } from "../utils/cookie.options.js";
 
 const authHealth = (req, res) => {
   const response = getAuthHealth();
@@ -71,10 +72,20 @@ const loginController = async (req, res, next) => {
   try {
     const authData = await loginUser(req.body);
 
+    // Store refresh token in an HttpOnly cookie
+    res.cookie(
+      "refreshToken",
+      authData.refreshToken,
+      refreshTokenCookieOptions,
+    );
+
+    // Don't send refresh token in the response body
+    const { refreshToken, ...responseData } = authData;
+
     res.status(200).json({
       success: true,
       message: "Login successful.",
-      data: authData,
+      data: responseData,
     });
   } catch (error) {
     next(error);
@@ -83,14 +94,23 @@ const loginController = async (req, res, next) => {
 
 const refreshTokenController = async (req, res, next) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken;
 
     const authData = await refreshAccessToken(refreshToken);
+
+    res.cookie(
+      "refreshToken",
+      authData.refreshToken,
+      refreshTokenCookieOptions,
+    );
+
+    // Remove refresh token from the response body
+    const { refreshToken: _, ...responseData } = authData;
 
     res.status(200).json({
       success: true,
       message: "Access token refreshed successfully.",
-      data: authData,
+      data: responseData,
     });
   } catch (error) {
     next(error);
@@ -99,9 +119,11 @@ const refreshTokenController = async (req, res, next) => {
 
 const logoutController = async (req, res, next) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken;
 
     const result = await logoutUser(refreshToken);
+
+    res.clearCookie("refreshToken", refreshTokenCookieOptions);
 
     res.status(200).json({
       success: true,

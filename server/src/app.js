@@ -1,6 +1,8 @@
 import express from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import authRoutes from "./features/auth/routes/auth.routes.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
@@ -26,8 +28,19 @@ const limiter = rateLimit({
 // Security headers
 app.use(helmet());
 
+// Allow request from the frontend
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  }),
+);
+
 // Parse JSON request bodies
 app.use(express.json());
+
+// Parse cookies
+app.use(cookieParser());
 
 // Apply rate limiting to all requests
 app.use(limiter);
