@@ -13,6 +13,7 @@ import validate from "../../../middleware/validate.js";
 import {
   registerSchema,
   loginSchema,
+  forgotPasswordSchema,
   resetPasswordSchema,
 } from "../validators/auth.validator.js";
 import authenticate from "../../../middleware/auth.middleware.js";
@@ -38,7 +39,11 @@ router.post("/refresh-token", refreshTokenController);
 router.post("/logout", logoutController);
 
 // Forgot Password
-router.post("/forgot-password", forgotPasswordController);
+router.post(
+  "/forgot-password",
+  validate(forgotPasswordSchema),
+  forgotPasswordController,
+);
 
 // Reset Password
 router.post(
