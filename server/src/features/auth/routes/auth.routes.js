@@ -17,6 +17,7 @@ import validate from "../../../middleware/validate.js";
 import {
   registerSchema,
   loginSchema,
+  forgotPasswordSchema,
   resetPasswordSchema,
   updateProfileSchema,
   changePasswordSchema,
@@ -45,7 +46,11 @@ router.post("/refresh-token", refreshTokenController);
 router.post("/logout", logoutController);
 
 // Forgot Password
-router.post("/forgot-password", forgotPasswordController);
+router.post(
+  "/forgot-password",
+  validate(forgotPasswordSchema),
+  forgotPasswordController,
+);
 
 // Reset Password
 router.post(
