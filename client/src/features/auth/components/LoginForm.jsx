@@ -1,33 +1,64 @@
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Input from '@/components/ui/Input';
 import PasswordInput from './PasswordInput';
 import Button from '@/components/ui/Button';
 
+import { loginSchema } from '../schemas/auth.schema.js';
+import api from '@/lib/axios';
+import { useAuth } from '../context/AuthContext';
+
 const LoginForm = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const { login } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await api.post('/auth/login', data);
+
+      //Store authenticated user and access token
+      login(response.data.data);
+
+      console.log('Login successful:', response.data);
+    } catch (error) {
+      console.error('Login failed:', error.response?.data || error.message);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-6" noValidate>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mt-8 space-y-6"
+      noValidate
+    >
       <div className="space-y-5">
         <Input
           id="email"
-          name="email"
-          type="email"
           label="Email Address"
           placeholder="adhi@example.com"
           autoComplete="email"
-          required
+          error={errors.email?.message}
+          {...register('email')}
         />
 
         <PasswordInput
           id="password"
-          name="password"
           label="Password"
           placeholder="Enter your password"
-          required
+          error={errors.password?.message}
+          {...register('password')}
         />
       </div>
 
@@ -49,8 +80,14 @@ const LoginForm = () => {
         </Link>
       </div>
 
-      <Button type="submit" className="w-full" variant="dark" size="lg">
-        Sign In
+      <Button
+        type="submit"
+        className="w-full"
+        variant="dark"
+        size="lg"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Signing in...' : 'Sign In'}
       </Button>
     </form>
   );

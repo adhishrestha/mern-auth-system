@@ -148,6 +148,12 @@ const refreshAccessToken = async (refreshToken) => {
   return {
     accessToken: newAccessToken,
     refreshToken: newRefreshToken,
+    user: {
+      id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+    },
   };
 };
 
