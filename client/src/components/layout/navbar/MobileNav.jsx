@@ -14,9 +14,9 @@ const MobileNav = ({ setOpenMenu, showUserMenu, setShowUserMenu }) => {
   const handleLogout = async () => {
     setShowUserMenu(false);
 
-    await logout();
-
     navigate('/', { replace: true });
+
+    await logout();
   };
 
   return (

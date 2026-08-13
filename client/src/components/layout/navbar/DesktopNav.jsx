@@ -17,9 +17,9 @@ const DesktopNav = ({ showUserMenu, setShowUserMenu, activeSection }) => {
   const handleLogout = async () => {
     setShowUserMenu(false);
 
-    await logout();
-
     navigate('/', { replace: true });
+
+    await logout();
   };
 
   return (

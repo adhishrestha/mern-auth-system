@@ -22,9 +22,9 @@ const MobileSidebar = ({ openMenu, setOpenMenu, activeSection }) => {
   const handleLogout = async () => {
     setOpenMenu(false);
 
-    await logout();
-
     navigate('/', { replace: true });
+
+    await logout();
   };
   return (
     <div
