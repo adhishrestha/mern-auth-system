@@ -28,9 +28,9 @@ const HomePage = () => {
       <section id="faq">
         <FAQSection />
       </section>
-      
+
       <section>
-        <CTASection/>
+        <CTASection />
       </section>
     </div>
   );

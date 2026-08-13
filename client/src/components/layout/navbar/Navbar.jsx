@@ -31,7 +31,11 @@ const Navbar = () => {
               setShowUserMenu={setShowUserMenu}
               activeSection={activeSection}
             />
-            <MobileNav setOpenMenu={setOpenMenu} />
+            <MobileNav
+              showUserMenu={showUserMenu}
+              setShowUserMenu={setShowUserMenu}
+              setOpenMenu={setOpenMenu}
+            />
           </nav>
         </Container>
       </header>

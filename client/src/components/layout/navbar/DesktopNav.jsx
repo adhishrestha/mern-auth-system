@@ -1,16 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { navLinks } from './navLinks';
 import { ChevronDown, CircleUserRound } from 'lucide-react';
-import IconButton from '@/components/ui/Button';
+import IconButton from '@/components/ui/IconButton';
 import Dropdown from '@/components/ui/Dropdown';
 import Button from '@/components/ui/Button';
 import { scrollToSection } from '@/utils/scrollToSection';
 import { getNavButtonClass } from '@/utils/navClass';
 import Logo from '@/components/common/Logo';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 const DesktopNav = ({ showUserMenu, setShowUserMenu, activeSection }) => {
-  const isAuthenticated = false;
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    setShowUserMenu(false);
+
+    await logout();
+
+    navigate('/', { replace: true });
+  };
 
   return (
     <div className="hidden items-center justify-between py-4 lg:flex">
@@ -45,6 +55,9 @@ const DesktopNav = ({ showUserMenu, setShowUserMenu, activeSection }) => {
                 className="flex items-center gap-1"
               >
                 <CircleUserRound className="h-5 w-5" />
+                <span className="text-sm font-medium">
+                  {user?.fullName?.split(' ')[0]}
+                </span>
                 <ChevronDown
                   className={`h-4 w-4 transition-transform ${
                     showUserMenu ? 'rotate-180' : ''
@@ -56,6 +69,14 @@ const DesktopNav = ({ showUserMenu, setShowUserMenu, activeSection }) => {
             <ul className="flex flex-col gap-1">
               <li>
                 <Link
+                  to="/dashboard"
+                  className="block rounded-md px-3 py-2 text-sm hover:bg-gray-100"
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/profile"
                   className="block rounded-md px-3 py-2 text-sm hover:bg-gray-100"
                 >
@@ -64,7 +85,11 @@ const DesktopNav = ({ showUserMenu, setShowUserMenu, activeSection }) => {
               </li>
 
               <li>
-                <button className="w-full rounded-md px-3 py-2 text-left text-sm hover:bg-gray-100">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full rounded-md px-3 py-2 text-left text-sm hover:bg-gray-100"
+                >
                   Logout
                 </button>
               </li>

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -12,6 +12,7 @@ import { useAuth } from '../context/AuthContext';
 
 const LoginForm = () => {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -32,6 +33,8 @@ const LoginForm = () => {
       login(response.data.data);
 
       console.log('Login successful:', response.data);
+
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
     }

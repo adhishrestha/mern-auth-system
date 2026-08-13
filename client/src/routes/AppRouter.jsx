@@ -10,6 +10,9 @@ import ForgotPasswordPage from '@/features/auth/pages/ForgotPasswordPage';
 import VerifyEmailPage from '@/features/auth/pages/VerifyEmailPage';
 import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage';
 import CheckEmailPage from '@/features/auth/pages/CheckEmailPage';
+import ProtectedRoute from './ProtectedRoute';
+import DashboardPage from '@/features/dashboard/pages/DashboardPage';
+import ProfilePage from '@/features/account/pages/ProfilePage';
 
 const AppRouter = () => {
   return (
@@ -35,6 +38,14 @@ const AppRouter = () => {
 
           {/* User clicks the email link */}
           <Route path="verify-email/:token" element={<VerifyEmailPage />} />
+        </Route>
+
+        {/* Protected */}
+        <Route element={<MainLayout />}>
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+          </Route>
         </Route>
 
         {/* 404 */}

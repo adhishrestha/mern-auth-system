@@ -18,10 +18,16 @@ export const AuthProvider = ({ children }) => {
     setApiAccessToken(authData.accessToken);
   };
 
-  const logout = () => {
-    setUser(null);
-    setAccessToken(null);
-    setApiAccessToken(null);
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout failed:', error.response?.data || error.message);
+    } finally {
+      setUser(null);
+      setAccessToken(null);
+      setApiAccessToken(null);
+    }
   };
 
   useEffect(() => {
@@ -67,12 +73,6 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
   };
-  console.log('Auth state:', {
-    user,
-    accessToken,
-    isAuthenticated: Boolean(accessToken),
-    isLoading,
-  });
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
