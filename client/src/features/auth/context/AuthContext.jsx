@@ -18,6 +18,10 @@ export const AuthProvider = ({ children }) => {
     setApiAccessToken(authData.accessToken);
   };
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+  };
+
   const logout = async () => {
     try {
       await api.post('/auth/logout');
@@ -71,6 +75,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: Boolean(accessToken),
     isLoading,
     login,
+    updateUser,
     logout,
   };
 

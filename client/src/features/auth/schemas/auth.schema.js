@@ -6,4 +6,11 @@ const loginSchema = z.object({
   password: z.string().min(1, 'Password is required.'),
 });
 
-export { loginSchema };
+const updateProfileSchema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, 'Full name must be at least 2 characters.')
+    .max(100, 'Full name must not exceed 100 characters.'),
+});
+export { loginSchema, updateProfileSchema };
