@@ -13,6 +13,7 @@ import CheckEmailPage from '@/features/auth/pages/CheckEmailPage';
 import ProtectedRoute from './ProtectedRoute';
 import DashboardPage from '@/features/dashboard/pages/DashboardPage';
 import ProfilePage from '@/features/account/pages/ProfilePage';
+import AccountSettingsPage from '@/features/account/pages/AccountSettingsPage';
 
 const AppRouter = () => {
   return (
@@ -45,6 +46,7 @@ const AppRouter = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="settings" element={<AccountSettingsPage />} />
           </Route>
         </Route>
 

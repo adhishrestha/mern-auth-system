@@ -76,6 +76,12 @@ const MobileSidebar = ({ openMenu, setOpenMenu, activeSection }) => {
                 </Button>
               </Link>
 
+              <Link to="/settings" onClick={() => setOpenMenu(false)}>
+                <Button variant="outlineDark" size="md" fullWidth>
+                  Account Settings
+                </Button>
+              </Link>
+
               <Button
                 variant="outlineDark"
                 size="md"
