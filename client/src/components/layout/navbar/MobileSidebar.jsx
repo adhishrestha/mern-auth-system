@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import IconButton from '@/components/ui/IconButton';
 import { X } from 'lucide-react';
 import { navLinks } from './navLinks';
@@ -7,14 +7,24 @@ import Button from '@/components/ui/Button';
 import { scrollToSection } from '@/utils/scrollToSection';
 import { getNavButtonClass } from '@/utils/navClass';
 import Logo from '@/components/common/Logo';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 const MobileSidebar = ({ openMenu, setOpenMenu, activeSection }) => {
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
   const handleClick = (id) => {
     setOpenMenu(false);
 
     setTimeout(() => {
       scrollToSection(id);
     }, 100);
+  };
+  const handleLogout = async () => {
+    setOpenMenu(false);
+
+    navigate('/', { replace: true });
+
+    await logout();
   };
   return (
     <div
@@ -52,11 +62,43 @@ const MobileSidebar = ({ openMenu, setOpenMenu, activeSection }) => {
           ))}
         </ul>
         <div className="border-t pt-5">
-          <Link to="/login">
-            <Button variant="dark" size="md" fullWidth className="">
-              Login / Sign Up
-            </Button>
-          </Link>
+          {isAuthenticated ? (
+            <div className="flex flex-col gap-4">
+              <Link to="/dashboard" onClick={() => setOpenMenu(false)}>
+                <Button variant="outlineDark" size="md" fullWidth>
+                  Dashboard
+                </Button>
+              </Link>
+
+              <Link to="/profile" onClick={() => setOpenMenu(false)}>
+                <Button variant="outlineDark" size="md" fullWidth>
+                  Profile
+                </Button>
+              </Link>
+
+              <Link to="/settings" onClick={() => setOpenMenu(false)}>
+                <Button variant="outlineDark" size="md" fullWidth>
+                  Account Settings
+                </Button>
+              </Link>
+
+              <Button
+                variant="outlineDark"
+                size="md"
+                fullWidth
+                onClick={handleLogout}
+                className=""
+              >
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Link to="/login" onClick={() => setOpenMenu(false)}>
+              <Button variant="dark" size="md" fullWidth>
+                Login / Sign Up
+              </Button>
+            </Link>
+          )}
         </div>
       </aside>
     </div>
