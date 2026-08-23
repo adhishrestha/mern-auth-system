@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ChangePasswordForm from '../components/ChangePasswordForm';
 import Button from '@/components/ui/Button';
+import DeleteAccountForm from '../components/DeleteAccountForm';
 
 const AccountSettingsPage = () => {
   return (
@@ -66,15 +67,7 @@ const AccountSettingsPage = () => {
             </p>
           </div>
 
-          <div className="mt-5">
-            <button
-              type="button"
-              disabled
-              className="rounded-md border border-red-300 px-4 py-2 text-sm font-medium text-red-400"
-            >
-              Delete Account
-            </button>
-          </div>
+          <DeleteAccountForm />
         </div>
       </div>
     </section>
