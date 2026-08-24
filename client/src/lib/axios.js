@@ -41,12 +41,19 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // If the failed request is the refresh endpoint itself,
-    // don't try to refresh again.
+    // Authentication endpoints should not trigger automatic token refresh.
+    const isAuthRequest =
+      originalRequest.url?.includes('/auth/login') ||
+      originalRequest.url?.includes('/auth/register') ||
+      originalRequest.url?.includes('/auth/forgot-password') ||
+      originalRequest.url?.includes('/auth/reset-password') ||
+      originalRequest.url?.includes('/auth/verify-email') ||
+      originalRequest.url?.includes('/auth/refresh-token');
+
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes('/auth/refresh-token')
+      !isAuthRequest
     ) {
       originalRequest._retry = true;
 

@@ -9,10 +9,13 @@ import Button from '@/components/ui/Button';
 import { loginSchema } from '../schemas/auth.schema.js';
 import api from '@/lib/axios';
 import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
+import { getApiErrorMessage } from '@/lib/apiError';
 
 const LoginForm = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [apiError, setApiError] = useState('');
   const {
     register,
     handleSubmit,
@@ -26,17 +29,16 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data) => {
+    setApiError('');
     try {
       const response = await api.post('/auth/login', data);
 
       //Store authenticated user and access token
       login(response.data.data);
 
-      console.log('Login successful:', response.data);
-
       navigate('/dashboard');
     } catch (error) {
-      console.error('Login failed:', error.response?.data || error.message);
+      setApiError(getApiErrorMessage(error));
     }
   };
 
@@ -46,6 +48,14 @@ const LoginForm = () => {
       className="mt-8 space-y-6"
       noValidate
     >
+      {apiError && (
+        <div
+          role="alert"
+          className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          {apiError}
+        </div>
+      )}
       <div className="space-y-5">
         <Input
           id="email"
