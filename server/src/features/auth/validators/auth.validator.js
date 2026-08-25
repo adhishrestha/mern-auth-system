@@ -1,4 +1,13 @@
 import { z } from "zod";
+
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters long.")
+  .max(100, "Password cannot exceed 100 characters.")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
+  .regex(/[a-z]/, "Password must contain at least one lowercase letter.")
+  .regex(/[0-9]/, "Password must contain at least one number.");
+
 export const registerSchema = z
   .object({
     fullName: z
@@ -13,10 +22,7 @@ export const registerSchema = z
       .email("Please provide a valid email address")
       .toLowerCase(),
 
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters"),
+    password: passwordSchema,
   })
   .strict();
 
@@ -31,12 +37,7 @@ export const forgotPasswordSchema = z.object({
 });
 
 export const resetPasswordSchema = z.object({
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long.")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter.")
-    .regex(/[0-9]/, "Password must contain at least one number."),
+  password: passwordSchema,
 });
 
 export const updateProfileSchema = z.object({
@@ -50,12 +51,7 @@ export const updateProfileSchema = z.object({
 export const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required."),
 
-  newPassword: z
-    .string()
-    .min(8, "New password must be at least 8 characters long.")
-    .regex(/[A-Z]/, "New password must contain at least one uppercase letter.")
-    .regex(/[a-z]/, "New password must contain at least one lowercase letter.")
-    .regex(/[0-9]/, "New password must contain at least one number."),
+  newPassword: passwordSchema,
 });
 
 export const deleteAccountSchema = z.object({
