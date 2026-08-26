@@ -34,6 +34,10 @@ const registerSchema = z
     path: ['confirmPassword'],
   });
 
+const forgotPasswordSchema = z.object({
+  email: z.email('Please enter a valid email address.').trim().toLowerCase(),
+});
+
 const updateProfileSchema = z.object({
   fullName: z
     .string()
@@ -69,6 +73,7 @@ const changePasswordSchema = z
 export {
   loginSchema,
   registerSchema,
+  forgotPasswordSchema,
   updateProfileSchema,
   changePasswordSchema,
 };
