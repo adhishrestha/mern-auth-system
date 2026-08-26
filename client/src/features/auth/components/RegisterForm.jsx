@@ -1,53 +1,99 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import PasswordInput from './PasswordInput';
 
+import { registerSchema } from '../schemas/auth.schema.js';
+import api from '@/lib/axios';
+import { getApiErrorMessage } from '@/lib/apiError';
+
 const RegisterForm = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const { confirmPassword, ...registrationData } = data;
+
+      await api.post('/auth/register', registrationData);
+
+      navigate('/check-email');
+    } catch (error) {
+      setError('root.serverError', {
+        type: 'server',
+        message: getApiErrorMessage(error),
+      });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+      {/* Server/API Error */}
+      {errors.root?.serverError?.message && (
+        <div
+          role="alert"
+          className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          {errors.root.serverError.message}
+        </div>
+      )}
+
       {/* Full Name */}
       <Input
         id="fullName"
-        name="fullName"
         label="Full Name"
         placeholder="John Doe"
         autoComplete="name"
-        required
+        error={errors.fullName?.message}
+        {...register('fullName')}
       />
 
       {/* Email */}
       <Input
         type="email"
         id="email"
-        name="email"
         label="Email"
         placeholder="adhi@example.com"
         autoComplete="email"
-        required
+        error={errors.email?.message}
+        {...register('email')}
       />
 
       {/* Password */}
       <PasswordInput
         id="password"
-        name="password"
         label="Password"
+        placeholder="Create a password"
         autoComplete="new-password"
-        required
+        error={errors.password?.message}
+        {...register('password')}
       />
 
       {/* Confirm Password */}
       <PasswordInput
         id="confirmPassword"
-        name="confirmPassword"
         label="Confirm Password"
+        placeholder="Confirm your password"
         autoComplete="new-password"
-        required
+        error={errors.confirmPassword?.message}
+        {...register('confirmPassword')}
       />
 
       {/* Terms */}
@@ -66,8 +112,13 @@ const RegisterForm = () => {
       </label>
 
       {/* Submit */}
-      <Button type="submit" className="w-full" variant="dark">
-        Create Account
+      <Button
+        type="submit"
+        className="w-full"
+        variant="dark"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Creating Account...' : 'Create Account'}
       </Button>
     </form>
   );
