@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -6,8 +7,11 @@ import PasswordInput from '@/features/auth/components/PasswordInput';
 
 import { changePasswordSchema } from '@/features/auth/schemas/auth.schema';
 import api from '@/lib/axios';
+import { getApiErrorMessage } from '@/lib/apiError';
 
 const ChangePasswordForm = () => {
+  const [successMessage, setSuccessMessage] = useState('');
+  const [apiError, setApiError] = useState('');
   const {
     register,
     handleSubmit,
@@ -23,22 +27,24 @@ const ChangePasswordForm = () => {
   });
 
   const onSubmit = async (data) => {
+    setSuccessMessage('');
+    setApiError('');
+
     try {
       const { currentPassword, newPassword } = data;
 
-      await api.patch('/auth/change-password', {
+      const response = await api.patch('/auth/change-password', {
         currentPassword,
         newPassword,
       });
 
-      console.log('Password changed successfully.');
+      setSuccessMessage(
+        response.data.message || 'Password changed successfully.',
+      );
 
       reset();
     } catch (error) {
-      console.error(
-        'Change password failed:',
-        error.response?.data || error.message,
-      );
+      setApiError(getApiErrorMessage(error));
     }
   };
 
@@ -74,6 +80,12 @@ const ChangePasswordForm = () => {
         error={errors.confirmPassword?.message}
         {...register('confirmPassword')}
       />
+
+      {successMessage && (
+        <p className="text-sm text-green-600">{successMessage}</p>
+      )}
+
+      {apiError && <p className="text-sm text-red-600">{apiError}</p>}
 
       <Button
         type="submit"
