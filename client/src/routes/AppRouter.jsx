@@ -36,9 +36,6 @@ const AppRouter = () => {
 
           {/* After registration */}
           <Route path="verify-email" element={<VerifyEmailPage />} />
-
-          {/* User clicks the email link */}
-          <Route path="verify-email/:token" element={<VerifyEmailPage />} />
         </Route>
 
         {/* Protected */}
