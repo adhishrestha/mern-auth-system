@@ -32,7 +32,7 @@ const AppRouter = () => {
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="check-email" element={<CheckEmailPage />} />
 
-          <Route path="reset-password/:token" element={<ResetPasswordPage />} />
+          <Route path="reset-password/" element={<ResetPasswordPage />} />
 
           {/* After registration */}
           <Route path="verify-email" element={<VerifyEmailPage />} />
