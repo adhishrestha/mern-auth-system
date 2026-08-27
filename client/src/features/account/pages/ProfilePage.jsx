@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { updateProfileSchema } from '@/features/auth/schemas/auth.schema';
 import api from '@/lib/axios';
+import { getApiErrorMessage } from '@/lib/apiError';
 
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 
 const ProfilePage = () => {
   const { user, updateUser } = useAuth();
+
+  const [successMessage, setSuccessMessage] = useState('');
+  const [apiError, setApiError] = useState('');
 
   const {
     register,
@@ -24,6 +28,9 @@ const ProfilePage = () => {
   });
 
   const onSubmit = async (data) => {
+    setSuccessMessage('');
+    setApiError('');
+
     try {
       const response = await api.patch('/auth/profile', data);
 
@@ -31,12 +38,11 @@ const ProfilePage = () => {
 
       updateUser(updatedUser);
 
-      console.log('Profile updated successfully:', updatedUser);
-    } catch (error) {
-      console.error(
-        'Profile update failed:',
-        error.response?.data || error.message,
+      setSuccessMessage(
+        response.data.message || 'Profile updated successfully.',
       );
+    } catch (error) {
+      setApiError(getApiErrorMessage(error));
     }
   };
 
@@ -71,6 +77,12 @@ const ProfilePage = () => {
               {user?.isEmailVerified ? 'Yes' : 'No'}
             </p>
           </div>
+
+          {successMessage && (
+            <p className="text-sm text-green-600">{successMessage}</p>
+          )}
+
+          {apiError && <p className="text-sm text-red-600">{apiError}</p>}
 
           <Button
             type="submit"
