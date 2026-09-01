@@ -23,15 +23,19 @@ export const AuthProvider = ({ children }) => {
     setUser(updatedUser);
   };
 
+  const clearAuth = () => {
+    setUser(null);
+    setAccessToken(null);
+    setApiAccessToken(null);
+  };
+
   const logout = async () => {
     try {
       await api.post('/auth/logout');
     } catch (error) {
       console.error('Logout failed:', getApiErrorMessage(error));
     } finally {
-      setUser(null);
-      setAccessToken(null);
-      setApiAccessToken(null);
+      clearAuth();
     }
   };
 
@@ -78,6 +82,7 @@ export const AuthProvider = ({ children }) => {
     login,
     updateUser,
     logout,
+    clearAuth,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

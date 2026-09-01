@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -8,8 +9,12 @@ import PasswordInput from '@/features/auth/components/PasswordInput';
 import { changePasswordSchema } from '@/features/auth/schemas/auth.schema';
 import api from '@/lib/axios';
 import { getApiErrorMessage } from '@/lib/apiError';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 const ChangePasswordForm = () => {
+  const navigate = useNavigate();
+  const { clearAuth } = useAuth();
+
   const [successMessage, setSuccessMessage] = useState('');
   const [apiError, setApiError] = useState('');
   const {
@@ -38,11 +43,18 @@ const ChangePasswordForm = () => {
         newPassword,
       });
 
-      setSuccessMessage(
-        response.data.message || 'Password changed successfully.',
-      );
+      clearAuth();
 
       reset();
+
+      navigate('/login', {
+        replace: true,
+        state: {
+          message:
+            response.data.message ||
+            'Password changed successfully. Please log in again.',
+        },
+      });
     } catch (error) {
       setApiError(getApiErrorMessage(error));
     }
