@@ -4,6 +4,7 @@ import api, {
   setAccessToken as setApiAccessToken,
   setOnRefreshFailure,
 } from '@/lib/axios';
+import { getApiErrorMessage } from '@/lib/apiError';
 
 const AuthContext = createContext(null);
 
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post('/auth/logout');
     } catch (error) {
-      console.error('Logout failed:', error.response?.data || error.message);
+      console.error('Logout failed:', getApiErrorMessage(error));
     } finally {
       setUser(null);
       setAccessToken(null);

@@ -5,6 +5,7 @@ import PasswordInput from '@/features/auth/components/PasswordInput';
 
 import api from '@/lib/axios';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import { getApiErrorMessage } from '@/lib/apiError';
 
 const DeleteAccountForm = () => {
   const { logout } = useAuth();
@@ -38,10 +39,7 @@ const DeleteAccountForm = () => {
 
       await logout();
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          'Unable to delete your account. Please try again.',
-      );
+      setError(getApiErrorMessage(error));
     } finally {
       setIsDeleting(false);
     }
