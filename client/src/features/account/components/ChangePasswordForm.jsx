@@ -15,7 +15,6 @@ const ChangePasswordForm = () => {
   const navigate = useNavigate();
   const { clearAuth } = useAuth();
 
-  const [successMessage, setSuccessMessage] = useState('');
   const [apiError, setApiError] = useState('');
   const {
     register,
@@ -32,7 +31,6 @@ const ChangePasswordForm = () => {
   });
 
   const onSubmit = async (data) => {
-    setSuccessMessage('');
     setApiError('');
 
     try {
@@ -43,17 +41,21 @@ const ChangePasswordForm = () => {
         newPassword,
       });
 
+      sessionStorage.setItem(
+        'authSuccessMessage',
+        response.data.message ||
+          'Password changed successfully. Please log in again.',
+      );
+
+      sessionStorage.setItem('authPostPasswordChange', 'true');
+
       clearAuth();
 
       reset();
 
       navigate('/login', {
         replace: true,
-        state: {
-          message:
-            response.data.message ||
-            'Password changed successfully. Please log in again.',
-        },
+     
       });
     } catch (error) {
       setApiError(getApiErrorMessage(error));
@@ -93,9 +95,7 @@ const ChangePasswordForm = () => {
         {...register('confirmPassword')}
       />
 
-      {successMessage && (
-        <p className="text-sm text-green-600">{successMessage}</p>
-      )}
+   
 
       {apiError && <p className="text-sm text-red-600">{apiError}</p>}
 

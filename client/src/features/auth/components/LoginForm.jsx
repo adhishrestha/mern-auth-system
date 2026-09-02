@@ -1,4 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -9,13 +10,36 @@ import Button from '@/components/ui/Button';
 import { loginSchema } from '../schemas/auth.schema.js';
 import api from '@/lib/axios';
 import { useAuth } from '../context/AuthContext';
-import { useState } from 'react';
 import { getApiErrorMessage } from '@/lib/apiError';
 
 const LoginForm = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [apiError, setApiError] = useState('');
+
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isPostPasswordChange, setIsPostPasswordChange] = useState(false);
+
+  useEffect(() => {
+    const message = sessionStorage.getItem('authSuccessMessage');
+
+    if (message) {
+      setSuccessMessage(message);
+      sessionStorage.removeItem('authSuccessMessage');
+    }
+
+    const passwordChangeLogin =
+      sessionStorage.getItem('authPostPasswordChange') === 'true';
+
+    if (passwordChangeLogin) {
+      setIsPostPasswordChange(true);
+      sessionStorage.removeItem('authPostPasswordChange');
+    }
+  }, []);
+  const from = location.state?.from;
+
   const {
     register,
     handleSubmit,
@@ -36,7 +60,24 @@ const LoginForm = () => {
       //Store authenticated user and access token
       login(response.data.data);
 
-      navigate('/dashboard');
+      const getRedirectPath = (from) => {
+        if (!from?.pathname) {
+          return '/dashboard';
+        }
+
+        if (!from.pathname.startsWith('/')) {
+          return '/dashboard';
+        }
+
+        return `${from.pathname}${from.search || ''}${from.hash || ''}`;
+      };
+      const redirectTo = isPostPasswordChange
+        ? '/dashboard'
+        : getRedirectPath(from);
+
+      navigate(redirectTo, {
+        replace: true,
+      });
     } catch (error) {
       setApiError(getApiErrorMessage(error));
     }
@@ -48,6 +89,15 @@ const LoginForm = () => {
       className="mt-8 space-y-6"
       noValidate
     >
+      {successMessage && (
+        <div
+          role="status"
+          className="rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+        >
+          {successMessage}
+        </div>
+      )}
+
       {apiError && (
         <div
           role="alert"
