@@ -61,6 +61,11 @@ const loginUser = async ({ email, password }) => {
     throw new ApiError(401, "Invalid email or password.");
   }
 
+  // Check if the account supports local authentication
+  if (!user.authProviders.includes("local")) {
+    throw new ApiError(401, "Invalid email or password.");
+  }
+
   // Compare passwords
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
