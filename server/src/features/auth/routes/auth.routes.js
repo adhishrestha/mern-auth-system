@@ -18,6 +18,7 @@ import validate from "../../../middleware/validate.js";
 import {
   registerSchema,
   loginSchema,
+  googleAuthSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
   updateProfileSchema,
@@ -41,7 +42,7 @@ router.get("/verify-email", verifyEmailController);
 router.post("/login", validate(loginSchema), loginController);
 
 // Google Login
-router.post("/google", googleAuthController);
+router.post("/google", validate(googleAuthSchema), googleAuthController);
 
 // Refresh Access Token
 router.post("/refresh-token", refreshTokenController);
