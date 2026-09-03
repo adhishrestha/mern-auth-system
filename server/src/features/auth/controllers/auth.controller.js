@@ -13,6 +13,8 @@ import {
   deleteAccount,
 } from "../services/auth.service.js";
 
+import { googleAuthUser } from "../services/google-auth.service.js";
+
 import {
   sendVerificationEmail,
   sendPasswordResetEmail,
@@ -85,6 +87,32 @@ const loginController = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Login successful.",
+      data: responseData,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const googleAuthController = async (req, res, next) => {
+  try {
+    const { idToken } = req.body;
+
+    const authData = await googleAuthUser(idToken);
+
+    // Store refresh token in an HttpOnly cookie
+    res.cookie(
+      "refreshToken",
+      authData.refreshToken,
+      refreshTokenCookieOptions,
+    );
+
+    // Don't send refresh token in the response body
+    const { refreshToken: _, ...responseData } = authData;
+
+    res.status(200).json({
+      success: true,
+      message: "Google login successful.",
       data: responseData,
     });
   } catch (error) {
@@ -236,6 +264,7 @@ export {
   register,
   verifyEmailController,
   loginController,
+  googleAuthController,
   refreshTokenController,
   logoutController,
   forgotPasswordController,

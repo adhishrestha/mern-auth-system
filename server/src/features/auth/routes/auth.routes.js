@@ -4,6 +4,7 @@ import {
   register,
   verifyEmailController,
   loginController,
+  googleAuthController,
   refreshTokenController,
   logoutController,
   forgotPasswordController,
@@ -38,6 +39,9 @@ router.get("/verify-email", verifyEmailController);
 
 // Login
 router.post("/login", validate(loginSchema), loginController);
+
+// Google Login
+router.post("/google", googleAuthController);
 
 // Refresh Access Token
 router.post("/refresh-token", refreshTokenController);
