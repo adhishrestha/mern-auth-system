@@ -174,6 +174,14 @@ const forgotPassword = async (email) => {
     };
   }
 
+  // Only local authentication accounts can reset a password
+  if (!user.authProviders.includes("local")) {
+    return {
+      message:
+        "If an account with that email exists, a password reset email has been sent.",
+    };
+  }
+
   // Generate a secure token (1 hour expiry)
   const { rawToken, hashedToken, expiresAt } = generateSecureToken(
     60 * 60 * 1000,
@@ -191,7 +199,7 @@ const forgotPassword = async (email) => {
     message:
       "If an account with that email exists, a password reset email has been sent.",
   };
-};
+};;
 
 const resetPassword = async ({ token, password }) => {
   // Hash the incoming token
