@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { GoogleLogin } from '@react-oauth/google';
 
 import Input from '@/components/ui/Input';
 import PasswordInput from './PasswordInput';
@@ -83,6 +84,45 @@ const LoginForm = () => {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setApiError('');
+
+    try {
+      const response = await api.post('/auth/google', {
+        idToken: credentialResponse.credential,
+      });
+
+      // Store authenticated user and access token
+      login(response.data.data);
+
+      const getRedirectPath = (from) => {
+        if (!from?.pathname) {
+          return '/dashboard';
+        }
+
+        if (!from.pathname.startsWith('/')) {
+          return '/dashboard';
+        }
+
+        return `${from.pathname}${from.search || ''}${from.hash || ''}`;
+      };
+
+      const redirectTo = isPostPasswordChange
+        ? '/dashboard'
+        : getRedirectPath(from);
+
+      navigate(redirectTo, {
+        replace: true,
+      });
+    } catch (error) {
+      setApiError(getApiErrorMessage(error));
+    }
+  };
+
+  const handleGoogleError = () => {
+    setApiError('Google sign-in was unsuccessful. Please try again.');
+  };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -152,6 +192,24 @@ const LoginForm = () => {
       >
         {isSubmitting ? 'Signing in...' : 'Sign In'}
       </Button>
+
+      <div className="relative py-2">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-200" />
+        </div>
+
+        <div className="relative flex justify-center">
+          <span className="bg-white px-3 text-sm text-slate-500">OR</span>
+        </div>
+      </div>
+
+      <div className="flex justify-center">
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          useOneTap={false}
+        />
+      </div>
     </form>
   );
 };
