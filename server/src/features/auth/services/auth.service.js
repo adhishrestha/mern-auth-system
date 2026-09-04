@@ -290,6 +290,11 @@ const changePassword = async (userId, { currentPassword, newPassword }) => {
     throw new ApiError(404, "User not found.");
   }
 
+  // Only accounts with local authentication can change a password.
+  if (!user.authProviders.includes("local")) {
+    throw new ApiError(400, "Password authentication is not enabled.");
+  }
+
   // Verify current password
   const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
