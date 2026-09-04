@@ -199,7 +199,7 @@ const forgotPassword = async (email) => {
     message:
       "If an account with that email exists, a password reset email has been sent.",
   };
-};;
+};
 
 const resetPassword = async ({ token, password }) => {
   // Hash the incoming token
@@ -212,6 +212,11 @@ const resetPassword = async ({ token, password }) => {
   });
 
   if (!user) {
+    throw new ApiError(400, "Invalid or expired password reset token.");
+  }
+
+  // Only accounts with local authentication can reset a password
+  if (!user.authProviders.includes("local")) {
     throw new ApiError(400, "Invalid or expired password reset token.");
   }
 
