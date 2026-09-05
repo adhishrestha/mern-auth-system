@@ -14,6 +14,7 @@ import {
   changePasswordController,
   deleteAccountController,
 } from "../controllers/auth.controller.js";
+import { reauthenticateController } from "../controllers/reauth.controller.js";
 import validate from "../../../middleware/validate.js";
 import {
   registerSchema,
@@ -24,8 +25,10 @@ import {
   updateProfileSchema,
   changePasswordSchema,
   deleteAccountSchema,
+  reauthSchema,
 } from "../validators/auth.validator.js";
 import authenticate from "../../../middleware/auth.middleware.js";
+import requireReauthentication from "../../../middleware/reauth.middleware.js";
 
 const router = Router();
 
@@ -43,6 +46,13 @@ router.post("/login", validate(loginSchema), loginController);
 
 // Google Login
 router.post("/google", validate(googleAuthSchema), googleAuthController);
+
+router.post(
+  "/reauthenticate",
+  authenticate,
+  validate(reauthSchema),
+  reauthenticateController,
+);
 
 // Refresh Access Token
 router.post("/refresh-token", refreshTokenController);
@@ -91,6 +101,7 @@ router.patch(
 router.delete(
   "/delete-account",
   authenticate,
+  requireReauthentication,
   validate(deleteAccountSchema),
   deleteAccountController,
 );

@@ -328,22 +328,12 @@ const changePassword = async (userId, { currentPassword, newPassword }) => {
   };
 };
 
-const deleteAccount = async (userId, currentPassword) => {
+const deleteAccount = async (userId) => {
   // Find the authenticated user
   const user = await User.findById(userId);
 
   if (!user) {
     throw new ApiError(404, "User not found.");
-  }
-
-  // Verify current password
-  const isPasswordCorrect = await bcrypt.compare(
-    currentPassword,
-    user.password,
-  );
-
-  if (!isPasswordCorrect) {
-    throw new ApiError(400, "Current password is incorrect.");
   }
 
   // Permanently delete the user account

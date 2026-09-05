@@ -248,7 +248,9 @@ const changePasswordController = async (req, res, next) => {
 
 const deleteAccountController = async (req, res, next) => {
   try {
-    const result = await deleteAccount(req.user._id, req.body.currentPassword);
+    const result = await deleteAccount(req.user._id);
+
+    res.clearCookie("refreshToken", refreshTokenCookieOptions);
 
     res.status(200).json({
       success: true,

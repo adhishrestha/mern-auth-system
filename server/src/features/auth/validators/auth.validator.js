@@ -86,6 +86,4 @@ export const changePasswordSchema = z.object({
   newPassword: passwordSchema,
 });
 
-export const deleteAccountSchema = z.object({
-  currentPassword: z.string().min(1, "Current password is required."),
-});
+export const deleteAccountSchema = z.object({});
