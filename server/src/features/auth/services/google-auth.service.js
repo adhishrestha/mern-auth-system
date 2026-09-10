@@ -107,6 +107,7 @@ const googleAuthUser = async (idToken) => {
       email: user.email,
       isEmailVerified: user.isEmailVerified,
       avatar: user.avatar,
+      authProviders: user.authProviders,
     },
   };
 };

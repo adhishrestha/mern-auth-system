@@ -104,6 +104,7 @@ const loginUser = async ({ email, password }) => {
       fullName: user.fullName,
       email: user.email,
       isEmailVerified: user.isEmailVerified,
+      authProviders: user.authProviders,
     },
   };
 };
@@ -158,6 +159,7 @@ const refreshAccessToken = async (refreshToken) => {
       fullName: user.fullName,
       email: user.email,
       isEmailVerified: user.isEmailVerified,
+      authProviders: user.authProviders,
     },
   };
 };
@@ -242,7 +244,7 @@ const resetPassword = async ({ token, password }) => {
 
 const getCurrentUser = async (userId) => {
   const user = await User.findById(userId).select(
-    "_id fullName email isEmailVerified createdAt",
+    "_id fullName email isEmailVerified authProviders createdAt",
   );
 
   if (!user) {
@@ -254,6 +256,7 @@ const getCurrentUser = async (userId) => {
     fullName: user.fullName,
     email: user.email,
     isEmailVerified: user.isEmailVerified,
+    authProviders: user.authProviders,
     createdAt: user.createdAt,
   };
 };
