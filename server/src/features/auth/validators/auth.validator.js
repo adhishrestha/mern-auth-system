@@ -32,6 +32,38 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required."),
 });
 
+export const googleAuthSchema = z.object({
+  idToken: z.string().trim().min(1, "Google ID token is required."),
+});
+
+export const reauthSchema = z
+  .object({
+    method: z.enum(["password", "google"]),
+    password: z.string().min(1, "Password is required.").optional(),
+    idToken: z
+      .string()
+      .trim()
+      .min(1, "Google ID token is required.")
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.method === "password" && !data.password) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["password"],
+        message: "Password is required.",
+      });
+    }
+
+    if (data.method === "google" && !data.idToken) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["idToken"],
+        message: "Google ID token is required.",
+      });
+    }
+  });
+
 export const forgotPasswordSchema = z.object({
   email: z.email("Please enter a valid email address.").trim().toLowerCase(),
 });
@@ -54,6 +86,4 @@ export const changePasswordSchema = z.object({
   newPassword: passwordSchema,
 });
 
-export const deleteAccountSchema = z.object({
-  currentPassword: z.string().min(1, "Current password is required."),
-});
+export const deleteAccountSchema = z.object({});

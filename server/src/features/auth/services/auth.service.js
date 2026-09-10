@@ -61,6 +61,11 @@ const loginUser = async ({ email, password }) => {
     throw new ApiError(401, "Invalid email or password.");
   }
 
+  // Check if the account supports local authentication
+  if (!user.authProviders.includes("local")) {
+    throw new ApiError(401, "Invalid email or password.");
+  }
+
   // Compare passwords
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -99,6 +104,7 @@ const loginUser = async ({ email, password }) => {
       fullName: user.fullName,
       email: user.email,
       isEmailVerified: user.isEmailVerified,
+      authProviders: user.authProviders,
     },
   };
 };
@@ -153,6 +159,7 @@ const refreshAccessToken = async (refreshToken) => {
       fullName: user.fullName,
       email: user.email,
       isEmailVerified: user.isEmailVerified,
+      authProviders: user.authProviders,
     },
   };
 };
@@ -163,6 +170,14 @@ const forgotPassword = async (email) => {
 
   // Always return a generic success response
   if (!user) {
+    return {
+      message:
+        "If an account with that email exists, a password reset email has been sent.",
+    };
+  }
+
+  // Only local authentication accounts can reset a password
+  if (!user.authProviders.includes("local")) {
     return {
       message:
         "If an account with that email exists, a password reset email has been sent.",
@@ -202,6 +217,11 @@ const resetPassword = async ({ token, password }) => {
     throw new ApiError(400, "Invalid or expired password reset token.");
   }
 
+  // Only accounts with local authentication can reset a password
+  if (!user.authProviders.includes("local")) {
+    throw new ApiError(400, "Invalid or expired password reset token.");
+  }
+
   // Hash the new password
   const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -224,7 +244,7 @@ const resetPassword = async ({ token, password }) => {
 
 const getCurrentUser = async (userId) => {
   const user = await User.findById(userId).select(
-    "_id fullName email isEmailVerified createdAt",
+    "_id fullName email isEmailVerified authProviders createdAt",
   );
 
   if (!user) {
@@ -236,6 +256,7 @@ const getCurrentUser = async (userId) => {
     fullName: user.fullName,
     email: user.email,
     isEmailVerified: user.isEmailVerified,
+    authProviders: user.authProviders,
     createdAt: user.createdAt,
   };
 };
@@ -272,6 +293,11 @@ const changePassword = async (userId, { currentPassword, newPassword }) => {
     throw new ApiError(404, "User not found.");
   }
 
+  // Only accounts with local authentication can change a password.
+  if (!user.authProviders.includes("local")) {
+    throw new ApiError(400, "Password authentication is not enabled.");
+  }
+
   // Verify current password
   const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
@@ -305,22 +331,12 @@ const changePassword = async (userId, { currentPassword, newPassword }) => {
   };
 };
 
-const deleteAccount = async (userId, currentPassword) => {
+const deleteAccount = async (userId) => {
   // Find the authenticated user
   const user = await User.findById(userId);
 
   if (!user) {
     throw new ApiError(404, "User not found.");
-  }
-
-  // Verify current password
-  const isPasswordCorrect = await bcrypt.compare(
-    currentPassword,
-    user.password,
-  );
-
-  if (!isPasswordCorrect) {
-    throw new ApiError(400, "Current password is incorrect.");
   }
 
   // Permanently delete the user account
