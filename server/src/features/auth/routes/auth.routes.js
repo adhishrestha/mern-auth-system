@@ -29,6 +29,11 @@ import {
 } from "../validators/auth.validator.js";
 import authenticate from "../../../middleware/auth.middleware.js";
 import requireReauthentication from "../../../middleware/reauth.middleware.js";
+import {
+  authRateLimit,
+  recoveryRateLimit,
+  refreshRateLimit,
+} from "../../../middleware/rateLimit.middleware.js";
 
 const router = Router();
 
@@ -36,26 +41,32 @@ const router = Router();
 router.get("/health", authHealth);
 
 // Register
-router.post("/register", validate(registerSchema), register);
+router.post("/register", authRateLimit,  validate(registerSchema), register);
 
 // Verify-Email
 router.get("/verify-email", verifyEmailController);
 
 // Login
-router.post("/login", validate(loginSchema), loginController);
+router.post("/login", authRateLimit, validate(loginSchema), loginController);
 
 // Google Login
-router.post("/google", validate(googleAuthSchema), googleAuthController);
+router.post(
+  "/google",
+  authRateLimit,
+  validate(googleAuthSchema),
+  googleAuthController,
+);
 
 router.post(
   "/reauthenticate",
   authenticate,
+  authRateLimit,
   validate(reauthSchema),
   reauthenticateController,
 );
 
 // Refresh Access Token
-router.post("/refresh-token", refreshTokenController);
+router.post("/refresh-token", refreshRateLimit, refreshTokenController);
 
 // Logout
 router.post("/logout", logoutController);
@@ -63,6 +74,7 @@ router.post("/logout", logoutController);
 // Forgot Password
 router.post(
   "/forgot-password",
+  recoveryRateLimit,
   validate(forgotPasswordSchema),
   forgotPasswordController,
 );
@@ -70,6 +82,7 @@ router.post(
 // Reset Password
 router.post(
   "/reset-password",
+  recoveryRateLimit,
   validate(resetPasswordSchema),
   resetPasswordController,
 );
