@@ -53,6 +53,11 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/test-error", (req, res, next) => {
+  const error = new Error("THIS IS A SECRET INTERNAL ERROR");
+  next(error);
+});
+
 // Authentication routes
 app.use("/api/v1/auth", authRoutes);
 
