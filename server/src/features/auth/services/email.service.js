@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { escapeHtml } from "../utils/email-template.util.js";
 
 const getTransporter = () =>
   nodemailer.createTransport({
@@ -25,10 +26,13 @@ const sendEmail = async ({ to, subject, html }) => {
 };
 
 const sendVerificationEmail = async ({ email, name, verificationToken }) => {
-  const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
+  const safeName = escapeHtml(name);
+  const safeToken = encodeURIComponent(verificationToken);
+
+  const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${safeToken}`;
 
   const html = `
-    <h2>Welcome, ${name}!</h2>
+  <h2>Welcome, ${safeName}!</h2>
     <p>Thank you for registering.</p>
     <p>Please verify your email by clicking the link below:</p>
 
@@ -49,10 +53,13 @@ const sendVerificationEmail = async ({ email, name, verificationToken }) => {
 };
 
 const sendPasswordResetEmail = async ({ email, name, resetToken }) => {
-  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+  const safeName = escapeHtml(name);
+  const safeToken = encodeURIComponent(resetToken);
+
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${safeToken}`;
 
   const html = `
-    <h2>Hello, ${name}!</h2>
+  <h2>Hello, ${safeName}!</h2>
 
     <p>We received a request to reset your password.</p>
 
