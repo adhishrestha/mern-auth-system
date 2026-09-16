@@ -1,12 +1,5 @@
 const isProduction = process.env.NODE_ENV === "production";
 
-export const accessTokenCookieOptions = {
-  httpOnly: true,
-  secure: isProduction,
-  sameSite: "strict",
-  maxAge: 15 * 60 * 1000, // 15 minutes
-};
-
 export const refreshTokenCookieOptions = {
   httpOnly: true,
   secure: isProduction,
