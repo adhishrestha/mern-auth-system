@@ -16,7 +16,9 @@ const generateReauthToken = ({ userId, purpose }) => {
 };
 
 const verifyReauthToken = (token) => {
-  return jwt.verify(token, process.env.JWT_REAUTH_SECRET);
+  return jwt.verify(token, process.env.JWT_REAUTH_SECRET, {
+    algorithms: ["HS256"],
+  });
 };
 
 export { generateReauthToken, verifyReauthToken };

@@ -3,6 +3,13 @@ import { ZodError } from "zod";
 const errorHandler = (err, req, res, next) => {
   const isDevelopment = process.env.NODE_ENV === "development";
 
+  // Always log unexpected errors on the server.
+  if (isDevelopment) {
+    console.error(err);
+  } else {
+    console.error("Unexpected server error:", err);
+  }
+
   //Handle Zod validation errors
   if (err instanceof ZodError) {
     return res.status(400).json({
@@ -16,7 +23,14 @@ const errorHandler = (err, req, res, next) => {
   }
 
   const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
+
+  const isKnownApiError =
+    typeof err.statusCode === "number" && err.statusCode < 500;
+
+  const message =
+    isDevelopment || isKnownApiError
+      ? err.message || "Internal Server Error"
+      : "Internal Server Error";
 
   const response = {
     success: false,
@@ -28,7 +42,7 @@ const errorHandler = (err, req, res, next) => {
     response.stack = err.stack;
   }
 
-  res.status(statusCode).json(response);
+  return res.status(statusCode).json(response);
 };
 
 export default errorHandler;

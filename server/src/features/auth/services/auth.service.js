@@ -196,7 +196,10 @@ const forgotPassword = async (email) => {
   await user.save();
 
   return {
-    user,
+    user: {
+      email: user.email,
+      fullName: user.fullName,
+    },
     resetToken: rawToken,
     message:
       "If an account with that email exists, a password reset email has been sent.",

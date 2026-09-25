@@ -13,11 +13,15 @@ const generateRefreshToken = (payload) => {
 };
 
 const verifyAccessToken = (token) => {
-  return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+  return jwt.verify(token, process.env.JWT_ACCESS_SECRET, {
+    algorithms: ["HS256"],
+  });
 };
 
 const verifyRefreshToken = (token) => {
-  return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+  return jwt.verify(token, process.env.JWT_REFRESH_SECRET, {
+    algorithms: ["HS256"],
+  });
 };
 
 export {

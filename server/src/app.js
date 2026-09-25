@@ -37,7 +37,7 @@ app.use(
 );
 
 // Parse JSON request bodies
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
 
 // Parse cookies
 app.use(cookieParser());
@@ -51,6 +51,11 @@ app.get("/", (req, res) => {
     success: true,
     message: "Welcome to MERN Authentication System API",
   });
+});
+
+app.get("/test-error", (req, res, next) => {
+  const error = new Error("THIS IS A SECRET INTERNAL ERROR");
+  next(error);
 });
 
 // Authentication routes

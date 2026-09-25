@@ -7,13 +7,15 @@ const authenticate = async (req, res, next) => {
     // Read Authorization header
     const authHeader = req.headers.authorization;
 
-    // Ensure the header exists and uses the Bearer scheme
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!authHeader) {
       throw new ApiError(401, "Access denied. No valid access token provided.");
     }
 
-    // Extract the JWT
-    const accessToken = authHeader.split(" ")[1];
+    const [scheme, accessToken] = authHeader.trim().split(/\s+/);
+
+    if (scheme !== "Bearer" || !accessToken) {
+      throw new ApiError(401, "Access denied. No valid access token provided.");
+    }
 
     let decoded;
 
