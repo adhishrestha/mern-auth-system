@@ -1,33 +1,167 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { GoogleLogin } from '@react-oauth/google';
 
 import Input from '@/components/ui/Input';
 import PasswordInput from './PasswordInput';
 import Button from '@/components/ui/Button';
 
+import { loginSchema } from '../schemas/auth.schema.js';
+import api from '@/lib/axios';
+import { useAuth } from '../context/AuthContext';
+import { getApiErrorMessage } from '@/lib/apiError';
+
 const LoginForm = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [apiError, setApiError] = useState('');
+
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isPostPasswordChange, setIsPostPasswordChange] = useState(false);
+
+  useEffect(() => {
+    const message = sessionStorage.getItem('authSuccessMessage');
+
+    if (message) {
+      setSuccessMessage(message);
+      sessionStorage.removeItem('authSuccessMessage');
+    }
+
+    const passwordChangeLogin =
+      sessionStorage.getItem('authPostPasswordChange') === 'true';
+
+    if (passwordChangeLogin) {
+      setIsPostPasswordChange(true);
+      sessionStorage.removeItem('authPostPasswordChange');
+    }
+  }, []);
+  const from = location.state?.from;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = async (data) => {
+    setApiError('');
+    try {
+      const response = await api.post('/auth/login', data);
+
+      //Store authenticated user and access token
+      login(response.data.data);
+
+      const getRedirectPath = (from) => {
+        if (!from?.pathname) {
+          return '/dashboard';
+        }
+
+        if (!from.pathname.startsWith('/')) {
+          return '/dashboard';
+        }
+
+        return `${from.pathname}${from.search || ''}${from.hash || ''}`;
+      };
+      const redirectTo = isPostPasswordChange
+        ? '/dashboard'
+        : getRedirectPath(from);
+
+      navigate(redirectTo, {
+        replace: true,
+      });
+    } catch (error) {
+      setApiError(getApiErrorMessage(error));
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setApiError('');
+
+    try {
+      const response = await api.post('/auth/google', {
+        idToken: credentialResponse.credential,
+      });
+
+      // Store authenticated user and access token
+      login(response.data.data);
+
+      const getRedirectPath = (from) => {
+        if (!from?.pathname) {
+          return '/dashboard';
+        }
+
+        if (!from.pathname.startsWith('/')) {
+          return '/dashboard';
+        }
+
+        return `${from.pathname}${from.search || ''}${from.hash || ''}`;
+      };
+
+      const redirectTo = isPostPasswordChange
+        ? '/dashboard'
+        : getRedirectPath(from);
+
+      navigate(redirectTo, {
+        replace: true,
+      });
+    } catch (error) {
+      setApiError(getApiErrorMessage(error));
+    }
+  };
+
+  const handleGoogleError = () => {
+    setApiError('Google sign-in was unsuccessful. Please try again.');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-6" noValidate>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mt-8 space-y-6"
+      noValidate
+    >
+      {successMessage && (
+        <div
+          role="status"
+          className="rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+        >
+          {successMessage}
+        </div>
+      )}
+
+      {apiError && (
+        <div
+          role="alert"
+          className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          {apiError}
+        </div>
+      )}
       <div className="space-y-5">
         <Input
           id="email"
-          name="email"
-          type="email"
           label="Email Address"
           placeholder="adhi@example.com"
           autoComplete="email"
-          required
+          error={errors.email?.message}
+          {...register('email')}
         />
 
         <PasswordInput
           id="password"
-          name="password"
           label="Password"
           placeholder="Enter your password"
-          required
+          error={errors.password?.message}
+          {...register('password')}
         />
       </div>
 
@@ -49,9 +183,33 @@ const LoginForm = () => {
         </Link>
       </div>
 
-      <Button type="submit" className="w-full" variant="dark" size="lg">
-        Sign In
+      <Button
+        type="submit"
+        className="w-full"
+        variant="dark"
+        size="lg"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Signing in...' : 'Sign In'}
       </Button>
+
+      <div className="relative py-2">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-200" />
+        </div>
+
+        <div className="relative flex justify-center">
+          <span className="bg-white px-3 text-sm text-slate-500">OR</span>
+        </div>
+      </div>
+
+      <div className="flex justify-center">
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          useOneTap={false}
+        />
+      </div>
     </form>
   );
 };

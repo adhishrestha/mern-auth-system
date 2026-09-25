@@ -10,6 +10,10 @@ import ForgotPasswordPage from '@/features/auth/pages/ForgotPasswordPage';
 import VerifyEmailPage from '@/features/auth/pages/VerifyEmailPage';
 import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage';
 import CheckEmailPage from '@/features/auth/pages/CheckEmailPage';
+import ProtectedRoute from './ProtectedRoute';
+import DashboardPage from '@/features/dashboard/pages/DashboardPage';
+import ProfilePage from '@/features/account/pages/ProfilePage';
+import AccountSettingsPage from '@/features/account/pages/AccountSettingsPage';
 
 const AppRouter = () => {
   return (
@@ -28,13 +32,19 @@ const AppRouter = () => {
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="check-email" element={<CheckEmailPage />} />
 
-          <Route path="reset-password/:token" element={<ResetPasswordPage />} />
+          <Route path="reset-password/" element={<ResetPasswordPage />} />
 
           {/* After registration */}
           <Route path="verify-email" element={<VerifyEmailPage />} />
+        </Route>
 
-          {/* User clicks the email link */}
-          <Route path="verify-email/:token" element={<VerifyEmailPage />} />
+        {/* Protected */}
+        <Route element={<MainLayout />}>
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="settings" element={<AccountSettingsPage />} />
+          </Route>
         </Route>
 
         {/* 404 */}
