@@ -1,5 +1,12 @@
 import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { escapeHtml } from "../utils/email-template.util.js";
+
+const isProduction = process.env.NODE_ENV === "production";
+
+const getResendClient = () => {
+  return new Resend(process.env.RESEND_API_KEY);
+};
 
 const getTransporter = () =>
   nodemailer.createTransport({
@@ -13,6 +20,24 @@ const getTransporter = () =>
   });
 
 const sendEmail = async ({ to, subject, html }) => {
+  if (isProduction) {
+    const resend = getResendClient();
+
+    const { data, error } = await resend.emails.send({
+      from: process.env.RESEND_FROM,
+      to,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error("Resend email error:", error);
+      throw new Error("Failed to send email");
+    }
+
+    return data;
+  }
+
   const transporter = getTransporter();
 
   const info = await transporter.sendMail({
@@ -32,8 +57,10 @@ const sendVerificationEmail = async ({ email, name, verificationToken }) => {
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${safeToken}`;
 
   const html = `
-  <h2>Welcome, ${safeName}!</h2>
+    <h2>Welcome, ${safeName}!</h2>
+
     <p>Thank you for registering.</p>
+
     <p>Please verify your email by clicking the link below:</p>
 
     <a href="${verificationUrl}">
@@ -59,7 +86,7 @@ const sendPasswordResetEmail = async ({ email, name, resetToken }) => {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${safeToken}`;
 
   const html = `
-  <h2>Hello, ${safeName}!</h2>
+    <h2>Hello, ${safeName}!</h2>
 
     <p>We received a request to reset your password.</p>
 
